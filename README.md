@@ -22,19 +22,23 @@ A clone of Willhaben designed to provide marketplaces for retail, vehicles, and 
 
 ---
 
+
 ## **Checklist of Functionalities**
 
 ### **User Management**
 - [ ] User registration (email, password, address).
 - [ ] Account maintenance (update password, address).
 - [ ] Unified user interface for both buyers and sellers.
+- [ ] Store above Data in a Postgres Table accessible by all three Marketplaces
+- [ ] Landing Page which allows to access the different Marketplaces
 
 ---
 
-### **Retail Marketplace**
+### Retail Marketplace
+
 #### Seller View:
 - [ ] Add, update, and delete product listings.
-    - **Product Properties**: Name, category, description, price, delivery options, condition, pictures, and additional category-specific properties.
+    - Product Properties: Name, category, description, price, delivery options, condition, pictures, and additional category-specific properties.
 - [ ] View all listings (current and sold).
 - [ ] Communicate with prospective buyers (chat-like functionality).
 - [ ] Mark listings as sold (retained in the system but hidden from buyers).
