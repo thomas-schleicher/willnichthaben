@@ -25,23 +25,23 @@ A clone of Willhaben designed to provide marketplaces for retail, vehicles, and 
 ## **Checklist of Functionalities**
 
 ### **User Management**
-- [] User registration (email, password, address).
-- [] Account maintenance (update password, address).
-- [] Unified user interface for both buyers and sellers.
+- [ ] User registration (email, password, address).
+- [ ] Account maintenance (update password, address).
+- [ ] Unified user interface for both buyers and sellers.
 
 ---
 
 ### **Retail Marketplace**
 #### Seller View:
-- [] Add, update, and delete product listings.
+- [ ] Add, update, and delete product listings.
     - **Product Properties**: Name, category, description, price, delivery options, condition, pictures, and additional category-specific properties.
-- [] View all listings (current and sold).
-- [] Communicate with prospective buyers (chat-like functionality).
-- [] Mark listings as sold (retained in the system but hidden from buyers).
+- [ ] View all listings (current and sold).
+- [ ] Communicate with prospective buyers (chat-like functionality).
+- [ ] Mark listings as sold (retained in the system but hidden from buyers).
 
 #### Buyer View:
-- [] Browse product categories hierarchically.
-- [] Search products using criteria:
+- [ ] Browse product categories hierarchically.
+- [ ] Search products using criteria:
     - [ ] Title/description substring.
     - [ ] Category and subcategories.
     - [ ] Price range.
@@ -49,44 +49,44 @@ A clone of Willhaben designed to provide marketplaces for retail, vehicles, and 
     - [ ] Condition.
     - [ ] Delivery method.
     - [ ] Additional properties.
-- [] Open detailed product views.
-- [] Communicate with sellers (chat-like functionality).
+- [ ] Open detailed product views.
+- [ ] Communicate with sellers (chat-like functionality).
 
 ---
 
 ### **Vehicle Marketplace**
 #### Seller View:
-- [] Add, update, and delete vehicle listings.
+- [ ] Add, update, and delete vehicle listings.
     - **Vehicle Properties**: Name, model, type, description, price, registration date, mileage, fuel type, color, condition, pictures.
-- [] View all listings (current and sold).
-- [] Communicate with prospective buyers (chat-like functionality).
-- [] Mark listings as sold (retained in the system but hidden from buyers).
+- [ ] View all listings (current and sold).
+- [ ] Communicate with prospective buyers (chat-like functionality).
+- [ ] Mark listings as sold (retained in the system but hidden from buyers).
 
 #### Buyer View:
-- [] Browse vehicle categories hierarchically (marks, models, types).
-- [] Search vehicles using criteria:
+- [ ] Browse vehicle categories hierarchically (marks, models, types).
+- [ ] Search vehicles using criteria:
     - [ ] Name/description substring.
     - [ ] Mark/model hierarchy.
     - [ ] Vehicle type.
     - [ ] Price range.
     - [ ] Seller address (city).
     - [ ] Registration date, mileage, fuel type, color, condition.
-- [] Open detailed vehicle views.
-- [] Communicate with sellers (chat-like functionality).
+- [ ] Open detailed vehicle views.
+- [ ] Communicate with sellers (chat-like functionality).
 
 ---
 
 ### **Real Estate Rental Marketplace**
 #### Owner View:
-- [] Add, update, and delete real estate listings.
+- [ ] Add, update, and delete real estate listings.
     - **Real Estate Properties**: Name, type, description, address (city), price, rental period, deposit, availability, pictures, additional category-specific properties.
-- [] View all listings (current and rented).
-- [] Communicate with prospective tenants (chat-like functionality).
-- [] Mark listings as rented (retained in the system but hidden from tenants).
+- [ ] View all listings (current and rented).
+- [ ] Communicate with prospective tenants (chat-like functionality).
+- [ ] Mark listings as rented (retained in the system but hidden from tenants).
 
 #### Tenant View:
-- [] Browse real estate categories hierarchically (provinces, cities).
-- [] Search real estate using criteria:
+- [ ] Browse real estate categories hierarchically (provinces, cities).
+- [ ] Search real estate using criteria:
     - [ ] Name/description substring.
     - [ ] Real estate type.
     - [ ] Price range.
@@ -94,8 +94,8 @@ A clone of Willhaben designed to provide marketplaces for retail, vehicles, and 
     - [ ] Address (province or city).
     - [ ] Availability.
     - [ ] Additional properties.
-- [] Open detailed real estate views.
-- [] Communicate with owners (chat-like functionality).
+- [ ] Open detailed real estate views.
+- [ ] Communicate with owners (chat-like functionality).
 
 ---
 
