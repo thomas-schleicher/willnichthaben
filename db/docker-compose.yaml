@@ -6,7 +6,7 @@ services:
     container_name: postgres
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRS_PASSWORD=default
+      - POSTGRES_PASSWORD=default
       - POSTGRES_DB=willnichthaben
     volumes:
       - ./scripts:/docker-entrypoint-initdb.d

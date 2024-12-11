@@ -1,0 +1,14 @@
+import Joi from "joi";
+
+export interface User {
+    id?: string,
+    email: string,
+    password: string,
+}
+
+export const userShema = Joi.object({
+    id: Joi.string().uuid(),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(8).required(),
+});
+
