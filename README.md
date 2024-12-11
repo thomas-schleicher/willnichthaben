@@ -26,7 +26,7 @@ A clone of Willhaben designed to provide marketplaces for retail, vehicles, and 
 ## **Checklist of Functionalities**
 
 ### **User Management**
-- [ ] User registration (email, password, address).
+- [x] User registration (email, password, address).
 - [ ] Account maintenance (update password, address).
 - [ ] Unified user interface for both buyers and sellers.
 - [ ] Store above Data in a Postgres Table accessible by all three Marketplaces

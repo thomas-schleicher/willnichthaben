@@ -1,3 +1,4 @@
+import { Address, addressShema } from "../../interfaces/address.interface";
 import { User, userShema } from "../../interfaces/user.interface";
 import pool from "../config/postgres.config";
 
@@ -14,24 +15,37 @@ class UserRepository {
         return rows[0] || null;
     }
 
-    async createUser(user: User): Promise<string | null> {
-        const query = "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id";
-
-        const validation = userShema.validate(user);
-        if (validation.error) {
-            console.error('Validation error:', validation.error.message);
+    async createUser(user: User, address: Address): Promise<string | null> {
+        const userValidation = userShema.validate(user);
+        const addressValidation = addressShema.validate(address);
+        if (userValidation.error) {
+            console.error("Validation error:", userValidation.error.message);
+            return null;
+        }
+        if (addressValidation.error) {
+            console.error("Validation error:", addressValidation.error.message);
             return null;
         }
 
         try {
-            const { rows } = await pool.query(query, [user.email, user.password]);
-            return rows[0]?.id || null;
+            await pool.query("BEGIN");
+
+            const addressQuery = "INSERT INTO addresses (postal_code, city, street_address) VALUES ($1, $2, $3) RETURNING id;";
+            const addressResult = await pool.query(addressQuery, [address.postal_code, address.city, address.street_address]);
+            const addressId = addressResult.rows[0]?.id;
+
+            const userQuery = "INSERT INTO users (email, password, address_id) VALUES ($1, $2, $3) RETURNING id;";
+            const userResult = await pool.query(userQuery, [user.email, user.password, addressId]);
+
+            await pool.query("COMMIT");
+
+            return userResult.rows[0]?.id || null;
         } catch (error: any) {
-            if (error.code === '23505') {
-                console.error('Duplicate email:', user.email);
+            if (error.code === "23505") {
+                console.error("Duplicate email:", user.email);
                 return null;
             }
-            console.error('Error creating user:', error.message);
+            console.error("Error creating user:", error.message);
             return null;
         }
     }

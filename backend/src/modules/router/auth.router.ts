@@ -3,6 +3,8 @@ import authService from "../service/auth.service"
 import sessionService from "../service/session.service";
 import userRepository from "../db/user.repository";
 import accountService from "../service/account.service";
+import { userShema } from "../../interfaces/user.interface";
+import { addressShema } from "../../interfaces/address.interface";
 
 const authRouter = Router();
 
@@ -42,24 +44,33 @@ authRouter.post("/logout", (req, res) => {
 
 authRouter.post("/signup", async (req, res) => {
     if (req.session.userID) {
-        res.status(400).json({ message: "User already logged in."});
+        res.status(400).json({ message: "User is already logged in to an account."});
         return;
     }
 
-    const { email, password } = req.body;
+    const { email, password, postal_code, city, street_address } = req.body;
+    const isValidUserInput = userShema.validate({
+        email: email,
+        password: password
+    });
+    const isValidAddressInput = addressShema.validate({
+        postal_code: postal_code,
+        city: city,
+        street_address: street_address,
+    });
 
-    if (!email || !password) {
-        res.status(400).json({ message: "Username and password are required." });
+    if (isValidUserInput.error || isValidAddressInput.error) {
+        res.status(400).json({ message: "The provided user input is not valid!" });
         return;
     }
 
     const existingUser = await userRepository.findUserByEmail(email);
     if (existingUser) {
-        res.status(400).json({ message: "This email already has an associated account." });
+        res.status(400).json({ message: "This email already has an associated with another account." });
         return;
     }
 
-    const newUserID = await accountService.createNewAccount(email, password);
+    const newUserID = await accountService.createNewAccount(email, password, postal_code, city, street_address);
     if (!newUserID) {
         res.status(500).json({ message: "Internal server error" });
         return;
