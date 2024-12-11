@@ -8,21 +8,21 @@ const authRouter = Router();
 
 authRouter.post('/login', async (req, res) => {
     const { email, password } = req.body;
+
+    if (req.session.userID) {
+        res.status(400).json({ message: "User already logged in." });
+        return;
+    }
     
     try {
-        const isAuthenticated = await authService.authenticate(email, password);
-        if (!isAuthenticated) {
+        const userID = await authService.authenticate(email, password);
+        if (!userID) {
             res.status(401).json({ message: "Invalid username or password!"});
             return;
         }
-
-        //todo: rework this to use the id, and make authenticate return the user id
-        const isSessionSet = await sessionService.setSessionUser(req, email);
-        if (!isSessionSet) {
-            res.status(401).json({ message: "This should not happen!" });
-        }
-        
+        sessionService.setSessionUserID(req, userID);
         res.status(200).json({ message: "User logged in." });
+
     } catch (error) {
         console.error("Error during login: ", error);
         res.status(500).json({ message: "Internal server error" });
@@ -30,7 +30,7 @@ authRouter.post('/login', async (req, res) => {
 });
 
 authRouter.post("/logout", (req, res) => {
-    if (!req.session.userId) {
+    if (!req.session.userID) {
         res.status(400).json({ message: "User not logged in." });
     } else {
         req.session.destroy(err => {
@@ -41,7 +41,7 @@ authRouter.post("/logout", (req, res) => {
 });
 
 authRouter.post("/signup", async (req, res) => {
-    if (req.session.userId) {
+    if (req.session.userID) {
         res.status(400).json({ message: "User already logged in."});
         return;
     }
@@ -66,7 +66,6 @@ authRouter.post("/signup", async (req, res) => {
     }
 
     sessionService.setSessionUserID(req, newUserID);
-    //todo: maybe create and send recovery code
 
     res.status(201).json({ message: "Account created and logged in." });
 });

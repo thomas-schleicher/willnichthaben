@@ -3,19 +3,20 @@ import UserRepository from "../db/user.repository";
 import { Request, Response } from "express"
 
 class AuthenticationService {
-    async authenticate(email: string, password: string): Promise<boolean> {
+    async authenticate(email: string, password: string): Promise<string | null> {
         const user = await UserRepository.findUserByEmail(email);
-        if (!user) return false;
+        if (!user) return null;
 
-        console.log(user);
-        console.log(user.password);
+        const userID = user.id!; //assert that the user object has a id, because it is fetched from the database
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
-        return isPasswordValid;
+        if (!isPasswordValid) return null;
+        
+        return userID;
     }
 
     isAuthenticated(req: Request, res: Response, next: Function) {
-        if (req.session.userId) {
+        if (req.session.userID) {
             next();
         } else {
             res.status(401).json({ message: "You must login first!"});
