@@ -1,0 +1,9 @@
+<svg width="450" height="194" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <title>Layer 1</title>
+  <rect rx="50" id="svg_6" height="150" width="450" y="0" x="0" stroke-width="0" stroke="#000" fill="#00a4e8"/>
+  <rect rx="30" id="svg_8" height="100" width="400" y="26.5" x="25" stroke-width="0" stroke="#000" fill="#ffffff"/>
+  <text style="cursor: move;" font-weight="bold" xml:space="preserve" text-anchor="start" font-family="'Azeret Mono'" font-size="35" id="svg_1" y="87.5" x="65.75821" stroke-width="0" stroke="#000" fill="#262274">WILLNICHTHABEN</text>
+  <rect transform="rotate(-45 102.5 162.5)" rx="10" stroke="#000" id="svg_13" height="25" width="75" y="150" x="65" stroke-width="0" fill="#00a4e8"/>
+ </g>
+</svg>
