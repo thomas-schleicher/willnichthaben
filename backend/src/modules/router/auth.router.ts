@@ -8,6 +8,14 @@ import { addressShema } from "../../interfaces/address.interface";
 
 const authRouter = Router();
 
+authRouter.get("/", (req, res) => {
+    if (!req.session.userID) {
+        res.status(200).json({ status: "unauthenticated" });
+        return;
+    }
+    res.status(200).json({ status: "authenticated" });
+});
+
 authRouter.post('/login', async (req, res) => {
     const { email, password } = req.body;
 

@@ -6,6 +6,7 @@ export const sessionMiddleware = session({
     saveUninitialized: false,
     cookie: {
         secure: false, //todo: change this for https (prod)
+        sameSite: "lax",
         httpOnly: true,
         maxAge: 1000 * 60 * 60,
     },

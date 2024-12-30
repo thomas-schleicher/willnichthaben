@@ -2,9 +2,17 @@ import express from 'express';
 import authRouter from './modules/router/auth.router';
 import { sessionMiddleware } from './modules/middleware/session.middleware';
 import userRouter from './modules/router/user.router';
+import cors from "cors";
 
 const app = express();
 const PORT = 3000;
+
+//nessessary for local development
+app.use(cors({
+    origin: 'http://localhost:4200',
+    methods: ['GET', 'POST', 'DELETE', 'UPDATE'],
+    credentials: true,
+}));
 
 app.use(express.json());
 app.use(sessionMiddleware);
