@@ -12,12 +12,6 @@ CREATE TABLE users (
     address_id  UUID REFERENCES addresses(id)
 );
 
-CREATE TABLE listing_images (
-    id          SERIAL PRIMARY KEY,
-    listing_id  INT NOT NULL REFERENCES listings(id) ON DELETE CASCADE,
-    image_url   VARCHAR(255) NOT NULL,
-);
-
 CREATE TABLE listings (
     id          SERIAL PRIMARY KEY,
     seller_id   UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -26,4 +20,10 @@ CREATE TABLE listings (
     price       NUMERIC(10, 2) NOT NULL,
     is_sold     BOOLEAN DEFAULT FALSE,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE listing_images (
+    id          SERIAL PRIMARY KEY,
+    listing_id  INT NOT NULL REFERENCES listings(id) ON DELETE CASCADE,
+    image_url   VARCHAR(255) NOT NULL
 );

@@ -17,7 +17,7 @@ CREATE TABLE vehicle_models (
 
 CREATE TABLE vehicle_types (
     id      SERIAL PRIMARY KEY,
-    name    VARCHAR(50) NOT NULL,
+    name    VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE vehicles (
@@ -696,7 +696,11 @@ VALUES
     ('XC60', 21),
     ('XC70', 21),
     ('XC90', 21),
-    ('Sonstige', 21),
+    ('Sonstige', 21);
+
+INSERT INTO
+    vehicle_models (name, mark_id)
+VALUES
     ('Atlantic', 22),
     ('Caponord', 22),
     ('Classic', 22),
@@ -917,7 +921,7 @@ VALUES
     ('Sonstige', 31),
     ('Bandit', 32),
     ('Burgman', 32),
-    ('CS', 32)
+    ('CS', 32),
     ('DR', 32),
     ('DR-Z', 32),
     ('GN', 32),
