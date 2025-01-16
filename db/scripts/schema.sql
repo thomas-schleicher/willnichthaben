@@ -16,6 +16,7 @@ CREATE TABLE listings (
     id          SERIAL PRIMARY KEY,
     seller_id   UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     type        VARCHAR(10) NOT NULL CHECK (type IN ('retail', 'property', 'vehicle')),
+    title       VARCHAR(255),
     description TEXT,
     price       NUMERIC(10, 2) NOT NULL,
     is_sold     BOOLEAN DEFAULT FALSE,
@@ -37,5 +38,6 @@ CREATE TABLE chat (
 CREATE TABLE message (
     id SERIAL PRIMARY KEY,
     chat_id int NOT NUll REFERENCES chat(id) ON DELETE CASCADE,
-    content TEXT NOT NULL
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
