@@ -32,7 +32,7 @@ CREATE TABLE listing_images (
 CREATE TABLE chat (
     id SERIAL PRIMARY KEY,
     listing_id int NOT NULL REFERENCES listings(id) ON DELETE CASCADE,
-    user_id UUID NOT NULL REFERENCES user(id) ON DELETE CASCADE
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE message (
