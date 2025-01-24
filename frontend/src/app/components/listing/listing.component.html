@@ -1,12 +1,14 @@
 <div>
     <div>
         <h1>{{title}}</h1>
-        <h2>{{subtitle}}</h2>
+        <app-vehicle-subheader [date_first_registration]="vehicle_date_first_registered" [mileage]="vehicle_mileage" [condition]="vehicle_condition"></app-vehicle-subheader>
+        <!-- Add other subheaders here -->
     </div>
     <div>
         <!-- IMAGE WHEEL COMPONENT -->
         <app-sidebar [price]="price" [seller_name]="seller_name" [address]="address"></app-sidebar>
     </div>
     <!-- Type specific information -->
+    <h3>Description</h3>
     <p>{{description}}</p>
 </div>

@@ -8,6 +8,11 @@ class ListingRepository {
             l.title,
             l.description,
             l.price,
+            l.type,
+            u.email AS user_email,
+            a.postal_code AS postal_code,
+            a.city,
+            a.street_address,
             v.name AS vehicle_name,
             v.date_first_registration AS vehicle_date_first_registered,
             v.mileage AS vehicle_mileage,
@@ -19,6 +24,10 @@ class ListingRepository {
             vtype.name AS vehicle_type
         FROM
             listings l
+        LEFT JOIN
+            users u ON u.id = l.seller_id
+        LEFT JOIN
+            addresses a ON a.id = u.address_id
         LEFT JOIN 
             vehicles v ON l.type = 'vehicle' AND l.id = v.id
         LEFT JOIN
