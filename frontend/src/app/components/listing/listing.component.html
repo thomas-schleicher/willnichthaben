@@ -1,12 +1,12 @@
 <div>
     <div>
-        <h1>Example Title</h1>
-        <h2>Sub Title - 40km/h oder so</h2>
+        <h1>{{title}}</h1>
+        <h2>{{subtitle}}</h2>
     </div>
     <div>
         <!-- IMAGE WHEEL COMPONENT -->
-        <app-sidebar [price]="2002001" [seller_name]="'Thomas Schleicher'" [address]="'Aicher Straße 71'"></app-sidebar>
+        <app-sidebar [price]="price" [seller_name]="seller_name" [address]="address"></app-sidebar>
     </div>
     <!-- Type specific information -->
-    <!-- Descritpion -->
+    <p>{{description}}</p>
 </div>
