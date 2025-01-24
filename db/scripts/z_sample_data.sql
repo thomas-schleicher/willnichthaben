@@ -11,9 +11,9 @@ VALUES
 INSERT INTO 
     listings (seller_id, type, title, description, price, is_sold)
 VALUES 
-    ('4ff81fe4-f62d-4a05-a86e-a2572840e6bb', 'vehicle', 'Test Title', 'Sample Description', 120, false);
+    ('4ff81fe4-f62d-4a05-a86e-a2572840e6bb', 'vehicle', 'Gratis A2 zum verschänken!', 'Sample Description: Very Cool!', 120, false);
 
 INSERT INTO 
     vehicles (name, model_id, type_id, date_first_registration, mileage, fuel_type, color, condition)
 VALUES
-    ('Big Boy A2', 2, 2, '1997-12-17 07:37:16-08', 20030, 'diesel', 'gray', 'used');
+    ('Very Big Boy A2', 2, 2, '1997-12-17 07:37:16-08', 20030, 'diesel', 'gray', 'used');

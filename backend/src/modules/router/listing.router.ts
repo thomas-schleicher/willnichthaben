@@ -14,7 +14,8 @@ listingRouter.get('/:id', async (req, res) => {
 
     const listing = await listingRepository.getListingByID(parsedId);
     if (!listing) {
-        res.status(400).json({ message: 'No such listing!'})
+        res.status(400).json({ message: 'No such listing!'});
+        return;
     }
     res.status(200).json(listing);
 });

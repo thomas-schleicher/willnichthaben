@@ -1,11 +1,13 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, numberAttribute } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ListingService } from '../../service/listing.service';
 import { VehicleSubheaderComponent } from '../vehicle/vehicle-subheader/vehicle-subheader.component';
+import { VehicleDescriptionComponent } from '../vehicle/vehicle-description/vehicle-description.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-listing',
-  imports: [SidebarComponent, VehicleSubheaderComponent],
+  imports: [SidebarComponent, VehicleSubheaderComponent, VehicleDescriptionComponent, NgIf],
   templateUrl: './listing.component.html',
   styleUrl: './listing.component.scss'
 })
@@ -13,7 +15,7 @@ import { VehicleSubheaderComponent } from '../vehicle/vehicle-subheader/vehicle-
 //todo: machts da eure sachen so wie ihr sie brauchts auch rein
 
 export class ListingComponent {
-  @Input() listingID!: number;
+  @Input({transform:numberAttribute}) id!: number;
   type: string = '';
 
   //general properties of a listing
@@ -38,7 +40,7 @@ export class ListingComponent {
   constructor (private listingService: ListingService) {}
 
   ngOnInit() {
-    this.listingService.getListing(this.listingID).subscribe(listing => {
+    this.listingService.getListing(this.id).subscribe(listing => {
       this.type = listing.type;
       this.title = listing.title;
       this.seller_name = listing.user_email;
@@ -55,22 +57,6 @@ export class ListingComponent {
       this.vehicle_model_name = listing.vehicle_model_name;
       this.vehicle_mark_name = listing.vehicle_mark_name;
       this.vehicle_type = listing.vehicle_type;
-
-      switch (this.type) {
-        case "vehicle": {
-          break;
-        }
-        case "retail": {
-          break;
-
-        }
-        case "property": {
-          break;
-        }
-        default: {
-          break;
-        }
-      }
     });
   }  
 }

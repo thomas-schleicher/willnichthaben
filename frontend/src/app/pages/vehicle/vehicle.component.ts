@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { ListingComponent } from '../../components/listing/listing.component';
 
 @Component({
   selector: 'app-vehicle',
-  imports: [ListingComponent],
+  imports: [],
   templateUrl: './vehicle.component.html',
   styleUrl: './vehicle.component.scss'
 })
