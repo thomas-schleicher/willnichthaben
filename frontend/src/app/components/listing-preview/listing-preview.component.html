@@ -1,0 +1,10 @@
+<a href="{{listingURL}}">
+    <img src="{{imgURL}}">
+    <div id="container">
+        <div>
+            <p>{{title}}</p>
+            <app-vehicle-subheader *ngIf="type === 'vehicle'" [condition]="condition" [date_first_registration]="date_first_registration" [mileage]="mileage"></app-vehicle-subheader>
+        </div>
+        <p id="price">€ {{price}}</p>
+    </div>
+</a>
