@@ -29,7 +29,7 @@ class ListingRepository {
         LEFT JOIN
             addresses a ON a.id = u.address_id
         LEFT JOIN 
-            vehicles v ON l.type = 'vehicle' AND l.id = v.id
+            vehicles v ON l.type = 'vehicle' AND l.id = v.listing_id
         LEFT JOIN
             vehicle_models vmodel ON l.type = 'vehicle' AND v.model_id = vmodel.id
         LEFT JOIN

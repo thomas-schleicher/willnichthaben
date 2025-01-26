@@ -22,6 +22,7 @@ CREATE TABLE vehicle_types (
 
 CREATE TABLE vehicles (
     id                      SERIAL PRIMARY KEY,
+    listing_id              INT NOT NULL REFERENCES listings(id) ON DELETE CASCADE,
     name                    VARCHAR(150) NOT NULL,
     model_id                INT NOT NULL REFERENCES vehicle_models(id) ON DELETE CASCADE,
     type_id                 INT REFERENCES vehicle_types(id) ON DELETE CASCADE,
