@@ -1,0 +1,62 @@
+<form [formGroup]="vehicleForm" (ngSubmit)="formSubmitted.emit(vehicleForm.value)">
+    <div>
+        <label for="price_min">Price Min:</label>
+        <input id="price_min" formControlName="price_min" type="number">
+    </div>
+    <div>
+        <label for="price_max">Price Max:</label>
+        <input id="price_max" formControlName="price_max" type="number">
+    </div>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>Vehicle Brands</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div formGroupName="brandFilter">
+            <div *ngFor="let brand of brands">
+                <mat-checkbox [formControlName]="brand.name">{{brand.name}}</mat-checkbox>
+            </div>
+        </div>
+    </mat-expansion-panel>
+
+    <!-- <div>
+        <label for="brand_ids">Brand IDs:</label>
+        <input id="brand_ids" formControlName="brand_ids" type="text">
+    </div> -->
+    <!-- <div>
+        <label for="model_ids">Model IDs:</label>
+        <input id="model_ids" formControlName="model_ids" type="text">
+    </div>
+    <div>
+        <label for="type_ids">Type IDs:</label>
+        <input id="type_ids" formControlName="type_ids" type="text">
+    </div>
+    <div>
+        <label for="date_first_registration_start">Date First Registration Start:</label>
+        <input id="date_first_registration_start" formControlName="date_first_registration_start" type="date">
+    </div>
+    <div>
+        <label for="date_first_registration_end">Date First Registration End:</label>
+        <input id="date_first_registration_end" formControlName="date_first_registration_end" type="date">
+    </div>
+    <div>
+        <label for="mileage_min">Mileage Min:</label>
+        <input id="mileage_min" formControlName="mileage_min" type="number">
+    </div>
+    <div>
+        <label for="mileage_max">Mileage Max:</label>
+        <input id="mileage_max" formControlName="mileage_max" type="number">
+    </div>
+    <div>
+        <label for="fule_types">Fuel Types:</label>
+        <input id="fule_types" formControlName="fule_types" type="text">
+    </div>
+    <div>
+        <label for="colors">Colors:</label>
+        <input id="colors" formControlName="colors" type="text">
+    </div>
+    <div>
+        <label for="conditions">Conditions:</label>
+        <input id="conditions" formControlName="conditions" type="text">
+    </div> -->
+    <button type="submit">Apply Filter</button>
+</form>

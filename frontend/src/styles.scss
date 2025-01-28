@@ -5,3 +5,5 @@
 @mixin responsive() {
     @media screen and (max-width: 600px) { @content; }
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

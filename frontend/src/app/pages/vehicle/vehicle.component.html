@@ -1,1 +1,15 @@
-<app-listing-preview [id]="'1'" [price]="100" [title]="'Title'" [type]="'vehicle'" [condition]="'Used'"></app-listing-preview>
+<div id="container">
+    <div id="filter">
+        <app-vehicle-filter></app-vehicle-filter>
+    </div>
+    <app-listing-preview 
+        *ngFor="let vehicle of vehicles" 
+        [id]="vehicle.listing_id" 
+        [price]="vehicle.price"
+        [title]="vehicle.title" 
+        [type]="vehicle.type" 
+        [date_first_registration]="vehicle.date_first_registration"
+        [mileage]="vehicle.mileage"
+        [condition]="vehicle.condition">
+    </app-listing-preview>
+</div>
