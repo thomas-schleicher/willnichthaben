@@ -15,4 +15,14 @@ vehicleRouter.get('/', validateQuery(vehicleQuerySchema), async (req, res) => {
     } 
 });
 
+vehicleRouter.get('/models', validateQuery(vehicleQuerySchema), async (req, res) => {
+    try {
+        const filters = req.query;
+        const models = await VehicleRepository.getModels(filters);
+        res.json({ models: models});
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while fetching possible models.'})
+    }
+});
+
 export default vehicleRouter;

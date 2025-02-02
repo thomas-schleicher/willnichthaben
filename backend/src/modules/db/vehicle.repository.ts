@@ -1,3 +1,4 @@
+import { query } from "express";
 import pool from "../config/postgres.config";
 
 class VehicleRepository {
@@ -98,6 +99,28 @@ class VehicleRepository {
 
     const result = await pool.query(query, queryParams);
     return result.rows;
+  }
+
+  async getModels(filters: any): Promise<any[]> {
+    const { category_id, brand_ids, type_ids } = filters;
+
+    let query = `
+      SELECT 
+            l.id AS listing_id,
+            l.type,
+            l.title,
+            l.price,
+            v.date_first_registration,
+            v.mileage,
+            v.condition
+        FROM vehicles v
+        JOIN listings l ON l.id = v.listing_id
+        JOIN vehicle_models vm ON v.model_id = vm.id
+        JOIN vehicle_marks vb ON vm.mark_id = vb.id
+        WHERE vb.category_id = $1
+    `;
+
+    return [];
   }
 }
 
