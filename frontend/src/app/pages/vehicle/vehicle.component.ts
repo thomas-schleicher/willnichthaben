@@ -22,13 +22,13 @@ export class VehicleComponent {
   ) {}
 
   ngOnInit() {
-    // this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe((params) => {
       
-    //   this.filterForm.patchValue(params);
-    //   this.vehicleService.getVehicles(params).subscribe((data) => {
-    //     this.vehicles = data.vehicles;
-    //   });
-    // });
+      // this.filterForm.patchValue(params);
+      this.vehicleService.getVehicles(params).subscribe((data) => {
+        this.vehicles = data.vehicles;
+      });
+    });
 
     // this.filterForm.valueChanges.subscribe((value) => {
     //   const queryParams = { ...value };
