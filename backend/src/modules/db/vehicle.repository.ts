@@ -1,4 +1,5 @@
-import { query } from "express";
+import { listingSchema } from "../../interfaces/listing.interface";
+import { vehicleSchema } from "../../interfaces/vehicle/vehicle.interface";
 import pool from "../config/postgres.config";
 
 class VehicleRepository {
@@ -127,6 +128,193 @@ class VehicleRepository {
 
     const result = await pool.query(query, queryParams);
     return result.rows;
+  }
+
+  async createVehicle(body: any, userID: string): Promise<void> {
+    const {
+      type,
+      title,
+      description,
+      price,
+      name,
+      model_id,
+      type_id,
+      date_first_registration,
+      mileage,
+      fuel_type,
+      color,
+      condition,
+    } = body;
+
+    const listingValidation = listingSchema.validate({
+      seller_id: userID,
+      type,
+      title,
+      description,
+      price,
+    });
+
+    const vehicleValidation = vehicleSchema.validate({
+      name,
+      model_id,
+      type_id,
+      date_first_registration,
+      mileage,
+      fuel_type,
+      color,
+      condition,
+    });
+
+    if (listingValidation.error) {
+      throw new Error("Validation error:" + listingValidation.error.message);
+    }
+    if (vehicleValidation.error) {
+      throw new Error("Validation error: " + vehicleValidation.error.message);
+    }
+
+    try {
+      await pool.query("BEGIN");
+
+      const listingQuery = `
+        INSERT INTO listings 
+          (seller_id, type, title, description, price)
+        VALUES 
+          ($1, $2, $3, $4, $5)
+        RETURNING id;
+      `;
+
+      const vehicleQuery = `
+        INSERT INTO vehicles
+          (listing_id, name, model_id, type_id, date_first_registration, mileage, fuel_type, color, condition)
+        VALUES
+          ($1, $2, $3, $4, $5, $6, $7, $8, $9);
+      `;
+
+      const listingQueryResult = await pool.query(listingQuery, [
+        userID,
+        type,
+        title,
+        description,
+        price,
+      ]);
+
+      const vehicleQueryResult = await pool.query(vehicleQuery, [
+        listingQueryResult.rows[0].id,
+        name,
+        model_id,
+        type_id,
+        date_first_registration,
+        mileage,
+        fuel_type,
+        color,
+        condition,
+      ]);
+
+      await pool.query("COMMIT");
+    } catch (error) {
+      await pool.query("ROLLBACK");
+      console.error("Error during vehicle creation: ", error);
+    }
+  }
+
+  async updateVehicle(body: any, listing_id: number, user_id: string): Promise<void> {
+
+    const {
+      type,
+      title,
+      description,
+      price,
+      name,
+      model_id,
+      type_id,
+      date_first_registration,
+      mileage,
+      fuel_type,
+      color,
+      condition,
+    } = body;
+
+    const listingValidation = listingSchema.validate({
+      id: listing_id,
+      seller_id: user_id,
+      type,
+      title,
+      description,
+      price
+    });
+
+    const vehicleValidation = vehicleSchema.validate({
+      name,
+      model_id,
+      type_id,
+      date_first_registration,
+      mileage,
+      fuel_type,
+      color,
+      condition
+    });
+
+    if (listingValidation.error) {
+      throw new Error("Validation error: " + listingValidation.error.message);
+    }
+    if (vehicleValidation.error) {
+      throw new Error("Validation error: " + vehicleValidation.error.message);
+    }
+
+    try {
+      await pool.query("BEGIN");
+
+      const listingQuery = `
+        UPDATE listings
+        SET
+          type = $1,
+          title = $2,
+          description = $3,
+          price = $4
+        WHERE
+          id = $5;
+      `;
+
+      const vehicleQuery = `
+        UPDATE vehicles
+        SET
+          name = $1,
+          model_id = $2,
+          type_id = $3,
+          date_first_registration = $4,
+          mileage = $5,
+          fuel_type = $6,
+          color = $7,
+          condition = $8
+        WHERE
+          listing_id = $9;
+      `;
+
+      await pool.query(listingQuery, [
+        type,
+        title,
+        description,
+        price,
+        listing_id,
+      ]);
+
+      await pool.query(vehicleQuery, [
+        name,
+        model_id,
+        type_id,
+        date_first_registration,
+        mileage,
+        fuel_type,
+        color,
+        condition,
+        listing_id,
+      ]);
+
+      await pool.query("COMMIT");
+    } catch (error) {
+      await pool.query("ROLLBACK");
+      console.error("Error during vehicle update: ", error);
+    }
   }
 }
 

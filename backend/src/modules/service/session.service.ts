@@ -1,9 +1,12 @@
 import { Request } from "express";
-import userRepository from "../db/user.repository";
 
 class SessionService {
     setSessionUserID(req: Request, userId: string) {
         req.session.userID = userId;
+    }
+
+    getSessionUserID(req: Request): string | undefined {
+        return req.session.userID;
     }
 
     async removeSessionUser(req: Request): Promise<boolean> {

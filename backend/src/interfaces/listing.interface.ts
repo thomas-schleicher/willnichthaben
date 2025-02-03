@@ -17,7 +17,7 @@ export const listingSchema = Joi.object({
     type: Joi.string().valid('retail', 'property', 'vehicle').required(),
     title: Joi.string().max(255).default(""),
     description: Joi.string().default("No additional infromation availible."),
-    price: Joi.number().precision(2).required(),
+    price: Joi.number().positive().precision(2).required(),
     is_sold: Joi.boolean().default(false),
     created_at: Joi.string().optional(),
 });

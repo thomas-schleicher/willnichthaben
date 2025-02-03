@@ -51,7 +51,7 @@ export class VehicleFilterComponent {
       // date_first_registration_end: this.fb.control(''),
       // mileage_min: this.fb.control(''),
       // mileage_max: this.fb.control(''),
-      // fule_types: this.fb.array([]),
+      // fuel_types: this.fb.array([]),
       // colors: this.fb.array([]),
       // conditions: this.fb.array([]),
     });

@@ -10,7 +10,7 @@ export class VehicleDescriptionComponent {
   @Input() name!: string;
   @Input() date_of_registration!: string;
   @Input() mileage!: number;
-  @Input() fule_type!: string;
+  @Input() fuel_type!: string;
   @Input() color!: string;
   @Input() condition!: string;
   @Input() model!: string;

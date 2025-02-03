@@ -1,7 +1,7 @@
 import pool from "../config/postgres.config";
 
 class ListingRepository {
-  async getListingByID(listingID: number): Promise<any[] | null> {
+  async getListingByID(listingID: number): Promise<any | null> {
     //todo: machts da eure sachen so wie ihr sie brauchts auch rein
     const query = `
         SELECT 
@@ -16,7 +16,7 @@ class ListingRepository {
             v.name AS vehicle_name,
             v.date_first_registration AS vehicle_date_first_registered,
             v.mileage AS vehicle_mileage,
-            v.fuel_type AS vehicle_fule_type,
+            v.fuel_type AS vehicle_fuel_type,
             v.color AS vehicle_color,
             v.condition AS vehicle_condition,
             vmodel.name AS vehicle_model_name,
@@ -45,6 +45,19 @@ class ListingRepository {
     `;
     const { rows } = await pool.query(query, [listingID]);
     return rows[0] || null;
+  }
+
+  async getUserIDByListingID(listingID: number): Promise<string> {
+    const query = `
+        SELECT 
+            seller_id
+        FROM
+            listings
+        WHERE
+            id = $1;
+    `;
+    const { rows } = await pool.query(query, [listingID]);
+    return rows[0].seller_id;
   }
 }
 

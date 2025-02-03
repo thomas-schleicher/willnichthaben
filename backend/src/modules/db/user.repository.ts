@@ -41,6 +41,7 @@ class UserRepository {
 
             return userResult.rows[0]?.id || null;
         } catch (error: any) {
+            await pool.query("ROLLBACK");
             if (error.code === "23505") {
                 console.error("Duplicate email:", user.email);
                 return null;
