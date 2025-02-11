@@ -1,4 +1,8 @@
-<form [formGroup]="vehicleForm" (ngSubmit)="formSubmitted.emit(vehicleForm.value)">
+<form [formGroup]="vehicleForm" (ngSubmit)="submitFilter()">
+    <mat-button-toggle-group formControlName="category_id">
+        <mat-button-toggle value="1">Cars</mat-button-toggle>
+        <mat-button-toggle value="2">Motorbikes</mat-button-toggle>
+    </mat-button-toggle-group>
     <div>
         <label for="price_min">Price Min:</label>
         <input id="price_min" formControlName="price_min" type="number">
@@ -13,7 +17,17 @@
         </mat-expansion-panel-header>
         <div formGroupName="brandFilter">
             <div *ngFor="let brand of brands">
-                <mat-checkbox [formControlName]="brand.name">{{brand.name}}</mat-checkbox>
+                <mat-checkbox [formControlName]="brand.id">{{brand.name}}</mat-checkbox>
+            </div>
+        </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>Vehicle Models</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div formGroupName="modelFilter">
+            <div *ngFor="let model of models">
+                <mat-checkbox [formControlName]="model.id">{{model.name}}</mat-checkbox>
             </div>
         </div>
     </mat-expansion-panel>

@@ -102,8 +102,29 @@ class VehicleRepository {
     return result.rows;
   }
 
+  async getBrands(filters: any): Promise<any[]> {
+    const { category_id } = filters;
+
+    let query = `
+      SELECT
+        marks.id AS id,
+        marks.name AS name
+      FROM
+        vehicle_marks AS marks
+      WHERE
+        marks.category_id = $1
+    `;
+
+    const result = await pool.query(query, [category_id]);
+    return result.rows;
+  }
+
   async getModels(filters: any): Promise<any[]> {
-    const { category_id, brand_ids } = filters;
+    let { category_id, brand_ids } = filters;
+
+    if (brand_ids && !Array.isArray(brand_ids)) {
+      brand_ids = [brand_ids];
+    }
 
     let query = `
       SELECT

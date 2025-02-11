@@ -18,13 +18,23 @@ vehicleRouter.get('/', validateQuery(vehicleQuerySchema), async (req, res) => {
     } 
 });
 
+vehicleRouter.get('/brands', validateQuery(vehicleQuerySchema), async (req, res) => {
+    try {
+        const filters = req.query;
+        const brands = await VehicleRepository.getBrands(filters);
+        res.json({ brands: brands});
+    } catch (error) {
+        res.status(500).json({ error: 'An error occured while fetching vehicle brands.'});
+    }
+});
+
 vehicleRouter.get('/models', validateQuery(vehicleQuerySchema), async (req, res) => {
     try {
         const filters = req.query;
         const models = await VehicleRepository.getModels(filters);
         res.json({ models: models});
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while fetching possible models.' })
+        res.status(500).json({ error: 'An error occurred while fetching possible models.' });
     }
 });
 

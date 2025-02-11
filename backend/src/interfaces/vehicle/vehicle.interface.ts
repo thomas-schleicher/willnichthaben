@@ -32,14 +32,62 @@ export const vehicleQuerySchema = Joi.object({
     category_id: Joi.number().integer().positive().required(),
     price_min: Joi.number().integer().positive().optional(),
     price_max: Joi.number().integer().positive().optional(),
-    model_ids: Joi.array().items(Joi.number().integer().positive()).optional(),
-    brand_ids: Joi.array().items(Joi.number().integer().positive()).optional(),
-    type_ids: Joi.array().items(Joi.number().integer().positive()).optional(),
+    model_ids: Joi.alternatives().try(
+        Joi.array().items(Joi.number().integer().positive()),
+        Joi.number().integer().positive()
+    ).optional().custom((value) => {
+        if (typeof value === 'number') {
+            return [value];
+        }
+        return value;
+    }),
+    brand_ids: Joi.alternatives().try(
+        Joi.array().items(Joi.number().integer().positive()),
+        Joi.number().integer().positive()
+    ).optional().custom((value) => {
+        if (typeof value === 'number') {
+            return [value];
+        }
+        return value;
+    }),
+    type_ids: Joi.alternatives().try(
+        Joi.array().items(Joi.number().integer().positive()),
+        Joi.number().integer().positive()
+    ).optional().custom((value) => {
+        if (typeof value === 'number') {
+            return [value];
+        }
+        return value;
+    }),
     date_first_registration_start: Joi.date().optional(),
     date_first_registration_end: Joi.date().optional(),
     mileage_min: Joi.number().integer().min(0).optional(),
     mileage_max: Joi.number().integer().min(0).optional(),
-    fuel_types: Joi.array().items(Joi.string().valid('diesel', 'benzin', 'electric', 'hybrid')).optional(),
-    colors: Joi.array().items(Joi.string().max(50)).optional(),
-    conditions: Joi.array().items(Joi.string().valid('new', 'used', 'broken')).optional()
+    fuel_types: Joi.alternatives().try(
+        Joi.array().items(Joi.string().valid('diesel', 'benzin', 'electric', 'hybrid')),
+        Joi.string().valid('diesel', 'benzin', 'electric', 'hybrid')
+    ).optional().custom((value) => {
+        if (typeof value === 'string') {
+            return [value];
+        }
+        return value;
+    }),
+    colors: Joi.alternatives().try(
+        Joi.array().items(Joi.string().max(50)),
+        Joi.string().max(50)
+    ).optional().custom((value) => {
+        if (typeof value === 'string') {
+            return [value];
+        }
+        return value;
+    }),
+    conditions: Joi.alternatives().try(
+        Joi.array().items(Joi.string().valid('new', 'used', 'broken')),
+        Joi.string().valid('new', 'used', 'broken')
+    ).optional().custom((value) => {
+        if (typeof value === 'string') {
+            return [value];
+        }
+        return value;
+    })
 });

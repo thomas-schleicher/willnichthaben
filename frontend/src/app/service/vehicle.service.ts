@@ -12,7 +12,13 @@ export class VehicleService {
     let httpParams = new HttpParams();
     Object.keys(params).forEach((key) => {
       if (params[key]) {
-        httpParams = httpParams.append(key, params[key]);
+        if (Array.isArray(params[key])) {
+          params[key].forEach((value: any) => {
+            httpParams = httpParams.append(key, value);
+          });
+        } else {
+          httpParams = httpParams.append(key, params[key]);
+        }
       }
     });
     return this.http.get<{ vehicles: any[] }>('/vehicle', {
@@ -20,14 +26,40 @@ export class VehicleService {
     });
   }
 
-  getVehicleFilterBrands(params: any): Observable<{brands: any[]}> {
+  getVehicleFilterModels(params: any): Observable<{ models: any[] }> {
     let httpParams = new HttpParams();
     Object.keys(params).forEach((key) => {
       if (params[key]) {
-        httpParams = httpParams.append(key, params[key]);
+        if (Array.isArray(params[key])) {
+          params[key].forEach((value: any) => {
+            httpParams = httpParams.append(key, value);
+          });
+        } else {
+          httpParams = httpParams.append(key, params[key]);
+        }
       }
     });
-    return this.http.get<{brands: any[]}>("vehicle/models", {
+
+    return this.http.get<{ models: any[] }>('/vehicle/models', {
+      params: httpParams,
+    });
+  }
+
+  getVehicleFilterBrands(params: any): Observable<{ brands: any[] }> {
+    let httpParams = new HttpParams();
+    Object.keys(params).forEach((key) => {
+      if (params[key]) {
+        if (Array.isArray(params[key])) {
+          params[key].forEach((value: any) => {
+            httpParams = httpParams.append(key, value);
+          });
+        } else {
+          httpParams = httpParams.append(key, params[key]);
+        }
+      }
+    });
+
+    return this.http.get<{ brands: any[] }>('/vehicle/brands', {
       params: httpParams,
     });
   }
