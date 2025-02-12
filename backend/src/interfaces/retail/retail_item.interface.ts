@@ -9,7 +9,7 @@ export interface RetailItem {
     name:                   string,
     category_id:            number,
     description?:           string,
-    price:                  number
+    price?:                 number
     delivery_options:       'only pick up' | 'only delivery' | 'pick up or delivery',
     condition:              'new' | 'used' | 'broken'
 }
@@ -19,11 +19,9 @@ export interface RetailItem {
  */
 export const retailSchema = Joi.object({
     id:                     Joi.number().integer().positive().optional(),
-    listing_id:             Joi.number().positive().required(),
+    listing_id:             Joi.number().positive().optional(),
     name:                   Joi.string().max(100).required(),
     category_id:            Joi.number().positive().required(),
-    description:            Joi.string().optional(),
-    price:                  Joi.number().precision(2).min(0).required(),
     delivery_options:       Joi.string().valid('only pick up', 'only delivery', 'pick up or delivery').required(),
     condition:              Joi.string().valid('new', 'used', 'broken').required()
 });

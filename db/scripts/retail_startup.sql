@@ -33,8 +33,6 @@ CREATE TABLE retail_items
     listing_id        INT NOT NULL REFERENCES listings(id) ON DELETE CASCADE,
     name              VARCHAR(100) NOT NULL,
     category_id       INT          NOT NULL REFERENCES retail_categories (id), -- category by ID
-    description       TEXT,
-    price             NUMERIC(10,2) NOT NULL,
     delivery_options  VARCHAR(100) NOT NULL CHECK (delivery_options IN ('only pick up', 'only delivery', 'pick up or delivery')),
     condition         VARCHAR(50)  NOT NULL CHECK (condition IN ('new', 'used', 'broken'))
 );
