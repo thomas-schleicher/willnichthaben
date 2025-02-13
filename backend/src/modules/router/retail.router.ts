@@ -88,4 +88,55 @@ retailRouter.put('/', authService.isAuthenticated, async (req, res) => {
     }
 });
 
+/**
+ * Route to delete a retail listing by its ID.
+ * 
+ * Requires authentication and retrieves the user's ID from the session.
+ * If authentication fails, it returns a 500 error.
+ * 
+ * It verifies if the authenticated user is the owner of the listing before allowing the delete.
+ * If verification fails, it returns a 403 error.
+ * 
+ * Otherwise, it attempts to delete a retail listing and returns a success message.
+ * 
+ * @route DELETE /retail/:listing_id
+ * @access Protected
+ * @param {Object} req - Express request object containing the listing id in the params.
+ * @param {Object} res - Express response object.
+ */
+retailRouter.delete('/:listing_id', authService.isAuthenticated, async (req, res) => {
+    const user_id = sessionService.getSessionUserID(req);
+
+    // check if user is authenticated
+    if (!user_id) {
+        res.status(500).json({ error: 'Authentication Failed' });
+        return;
+    }
+
+    const { listing_id } = req.params;
+    const parsed_listing_id = parseInt(listing_id, 10);
+
+    if (isNaN(parsed_listing_id)) {
+        res.status(400).json({ message: 'Invalid ID!' });
+        return;
+    }
+
+    try {
+        // retrieve the user ID associated with the listing
+        const listing_user_uuid = await listingRepository.getUserIDByListingID(parsed_listing_id);
+
+        // check if the authenticated user is authorized to delete this listing
+        if (listing_user_uuid !== user_id) {
+            res.status(403).json({ error: 'You are not authorized to delete this listing' });
+            return;
+        }
+
+        await retailRepository.deleteRetailListing(listing_id);
+        res.status(200).json({ message: 'Retail item listing deleted successfully' });
+    } catch(error) {
+        res.status(500).json({ error: 'An error occurred while deleting the retail item listing: ' + error });
+        return;
+    }
+});
+
 export default retailRouter;

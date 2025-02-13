@@ -207,6 +207,42 @@ class RetailRepository {
             console.error("Error during retail item update: ", error);    
         }
     }
+
+    /**
+     * Deletes a retail listing and its associated retail item from the database.
+     * 
+     * @param {number} listing_id - The ID of the listing to delete.
+     */
+    async deleteRetailListing(listing_id: string): Promise <void> {
+        try {
+            await pool.query("BEGIN");
+
+            // SQL query to delete the retail item
+            const retailItemQuery = `
+                DELETE FROM retail_items
+                WHERE
+                    listing_id = $1; 
+            `;
+
+            // SQL query to delete the retail item
+            const listingQuery = `
+                DELETE FROM listings
+                WHERE
+                    id = $1; 
+            `;
+
+            // execute the retail and listing delete
+            await pool.query(retailItemQuery, [listing_id]);
+            await pool.query(listingQuery, [listing_id]);
+
+            // commit transaction if both queries succeed
+            await pool.query("COMMIT");
+        } catch(error) {
+            // rollback transaction in case of an error
+            await pool.query("ROLLBACK");
+            console.error("Error during retail item delete: ", error);
+        }
+    } 
 }
 
 export default new RetailRepository();
