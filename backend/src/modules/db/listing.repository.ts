@@ -1,3 +1,4 @@
+import { listingImageShema } from "../../interfaces/listing.interface";
 import pool from "../config/postgres.config";
 
 class ListingRepository {
@@ -58,6 +59,51 @@ class ListingRepository {
     `;
     const { rows } = await pool.query(query, [listingID]);
     return rows[0].seller_id;
+  }
+
+  /**
+   * Creates a new image for a listing in the database.
+   * 
+   * This function validates the input data against predefined schemas and inserts the image
+   * to its associated listing into the database within a transaction.
+   * If an error occurs during insertion, the transaction is rolled back.
+   * 
+   * @param {number} listing_id - The ID of the listing to associate the image with.
+   * @param {string} image_url - The URL of the image to be stored.
+   * @throws {Error} If validation fails or a database error occurs.
+   */
+  async createImageForListing(listing_id: number, image_url: string): Promise<void> {
+    // validate image data
+    const imageValidation = listingImageShema.validate({
+        listing_id: listing_id,
+        image_url: image_url
+    });
+
+    try {
+        // begin transaction
+        await pool.query("BEGIN");
+
+        // SQL query to insert listing image
+        const query = `
+        INSERT INTO listing_images
+            (listing_id, image_url)
+        VALUES
+            ($1, $2);
+        `;
+
+        // execute listing image insertion
+        await pool.query(query, [
+            listing_id,
+            image_url
+        ]);
+
+        // commit transaction if query succeeds
+        await pool.query("COMMIT");
+    } catch (error) {
+        // rollback transaction in case of an error
+        await pool.query("ROLLBACK");
+        console.error("Error during listing image creation: ", error);
+    }
   }
 }
 
