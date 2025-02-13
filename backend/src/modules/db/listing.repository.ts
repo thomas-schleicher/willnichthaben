@@ -105,6 +105,27 @@ class ListingRepository {
         console.error("Error during listing image creation: ", error);
     }
   }
+
+  /**
+   * Fetches an image from a listing in the database.
+   * 
+   * @param {number} listing_id - The ID of the listing to associate the image with.
+   * @returns {any[]} The corresponding images to a listing
+   */
+  async getImageForListing(listing_id: number): Promise<any[]> {
+    // SQL query to fetch listing images
+    const query = `
+    SELECT * FROM listing_images
+    WHERE
+        listing_id = $1;
+    `;
+
+    // execute listing image fetching
+    const images = await pool.query(query, [ listing_id ]);
+
+    // return the resulting datasets
+    return images.rows;
+  }
 }
 
 export default new ListingRepository();
