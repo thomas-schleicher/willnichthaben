@@ -126,6 +126,65 @@ class ListingRepository {
     // return the resulting datasets
     return images.rows;
   }
+
+  /**
+    * Deletes an image from the listing_images table based on its ID.
+    * 
+    * @param {number} image_id - The ID of the image to be deleted
+    * @returns {any} - The deleted image record containing the image URL
+    */
+  async deleteImageOfListing(image_id: number): Promise<any> {
+    try {
+        // begin transaction
+        await pool.query("BEGIN");
+
+        // SQL query to delete listing image
+        const query = `
+        DELETE FROM listing_images
+        WHERE
+            id = $1
+        RETURNING
+            image_url; 
+        `;
+
+        // execute listing image fetching
+        const imageToDelete = await pool.query(query, [ image_id ]);
+
+        // commit transaction if query succeeds
+        await pool.query("COMMIT");
+
+        return imageToDelete;
+    } catch (error) {
+        // rollback transaction in case of an error
+        await pool.query("ROLLBACK");
+        console.error("Error during listing image creation: ", error);
+    }
+  }
+
+  /**
+   * Retrieves the listing ID associated with a given image ID.
+   * 
+   * This function executes a SQL query to fetch the corresponding listing ID
+   * from the listing_images table based on the provided image ID.
+   * 
+   * @async
+   * @param {number} image_id - The ID of the image for which the listing ID is to be retrieved
+   * @returns {any} - The ID of the listing associated with the image
+   */
+  async getListingIDbyImageID(image_id: number): Promise<any> {
+    // SQL query to fetch listing id by image id
+    const query = `
+    SELECT listing_id FROM listing_images
+    WHERE
+        id = $1;
+    `;
+
+    // execute listing id by image id fetching
+    const result = await pool.query(query, [ image_id ]);
+
+    // return the resulting datasets
+    return result.rows[0].listing_id;
+  }
 }
 
 export default new ListingRepository();
