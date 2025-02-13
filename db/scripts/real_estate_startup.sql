@@ -96,7 +96,7 @@ values ('Wien', '[1000,2000)'),
        ('Vorarlberg', '[6700,7000)'),
        ('Burgenland', '[7000,8000)'),
        ('Steiermark', '[8000,9000)'),
-       ('Kärnten', '[9000,10000)');
+       ('Kärnten', '[9000,9999)');
 
 
 -- cities thank you chatgpt
