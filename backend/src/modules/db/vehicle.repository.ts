@@ -4,7 +4,7 @@ import pool from "../config/postgres.config";
 
 class VehicleRepository {
   async getVehicles(filters: any): Promise<number[]> {
-    const {
+    let {
       category_id,
       price_min,
       price_max,
@@ -19,6 +19,30 @@ class VehicleRepository {
       colors,
       conditions,
     } = filters;
+
+    if (brand_ids && !Array.isArray(brand_ids)) {
+      brand_ids = [brand_ids];
+    }
+
+    if (model_ids && !Array.isArray(model_ids)) {
+      model_ids = [model_ids];
+    }
+
+    if (type_ids && !Array.isArray(type_ids)) {
+      type_ids = [type_ids];
+    }
+
+    if (fuel_types && !Array.isArray(fuel_types)) {
+      fuel_types = [fuel_types];
+    }
+
+    if (colors && !Array.isArray(colors)) {
+      colors = [colors];
+    }
+
+    if (conditions && !Array.isArray(conditions)) {
+      conditions = [conditions];
+    }
 
     let query = `
         SELECT 

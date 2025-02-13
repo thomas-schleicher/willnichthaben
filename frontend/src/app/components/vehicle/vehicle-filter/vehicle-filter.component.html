@@ -3,14 +3,6 @@
         <mat-button-toggle value="1">Cars</mat-button-toggle>
         <mat-button-toggle value="2">Motorbikes</mat-button-toggle>
     </mat-button-toggle-group>
-    <div>
-        <label for="price_min">Price Min:</label>
-        <input id="price_min" formControlName="price_min" type="number">
-    </div>
-    <div>
-        <label for="price_max">Price Max:</label>
-        <input id="price_max" formControlName="price_max" type="number">
-    </div>
     <mat-expansion-panel>
         <mat-expansion-panel-header>
             <mat-panel-title>Vehicle Brands</mat-panel-title>
@@ -31,46 +23,68 @@
             </div>
         </div>
     </mat-expansion-panel>
-
-    <!-- <div>
-        <label for="brand_ids">Brand IDs:</label>
-        <input id="brand_ids" formControlName="brand_ids" type="text">
-    </div> -->
-    <!-- <div>
-        <label for="model_ids">Model IDs:</label>
-        <input id="model_ids" formControlName="model_ids" type="text">
-    </div>
-    <div>
-        <label for="type_ids">Type IDs:</label>
-        <input id="type_ids" formControlName="type_ids" type="text">
-    </div>
-    <div>
-        <label for="date_first_registration_start">Date First Registration Start:</label>
-        <input id="date_first_registration_start" formControlName="date_first_registration_start" type="date">
-    </div>
-    <div>
-        <label for="date_first_registration_end">Date First Registration End:</label>
-        <input id="date_first_registration_end" formControlName="date_first_registration_end" type="date">
-    </div>
-    <div>
-        <label for="mileage_min">Mileage Min:</label>
-        <input id="mileage_min" formControlName="mileage_min" type="number">
-    </div>
-    <div>
-        <label for="mileage_max">Mileage Max:</label>
-        <input id="mileage_max" formControlName="mileage_max" type="number">
-    </div>
-    <div>
-        <label for="fuel_types">Fuel Types:</label>
-        <input id="fuel_types" formControlName="fuel_types" type="text">
-    </div>
-    <div>
-        <label for="colors">Colors:</label>
-        <input id="colors" formControlName="colors" type="text">
-    </div>
-    <div>
-        <label for="conditions">Conditions:</label>
-        <input id="conditions" formControlName="conditions" type="text">
-    </div> -->
-    <button type="submit">Apply Filter</button>
+    <mat-form-field>
+        <mat-label>Minimum Price</mat-label>
+        <input matInput type="number" formControlName="price_min" min="0" max="100000">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Maximum Price</mat-label>
+        <input matInput type="number" formControlName="price_max" min="0" max="100000">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Vehicle Type</mat-label>
+        <mat-select formControlName="type_ids">
+            <mat-option [value]="">None</mat-option>
+            <mat-option [value]="1">Limousine</mat-option>
+            <mat-option [value]="2">SUV Geländewagen</mat-option>
+            <mat-option [value]="3">Kombi Family Van</mat-option>
+            <mat-option [value]="4">Klein- und Kompaktwagen</mat-option>
+            <mat-option [value]="5">Sportwagen Coupe</mat-option>
+            <mat-option [value]="6">Cabrio Roadster</mat-option>
+            <mat-option [value]="7">Kleinbus</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Fule Type</mat-label>
+        <mat-select formControlName="fuel_types">
+            <mat-option [value]="">None</mat-option>
+            <mat-option [value]="'diesel'">Diesel</mat-option>
+            <mat-option [value]="'benzin'">Benzin</mat-option>
+            <mat-option [value]="'electric'">Electric</mat-option>
+            <mat-option [value]="'hybrid'">Hybrid</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Condition</mat-label>
+        <mat-select formControlName="conditions">
+            <mat-option [value]="">None</mat-option>
+            <mat-option [value]="'new'">New</mat-option>
+            <mat-option [value]="'used'">Used</mat-option>
+            <mat-option [value]="'broken'">Broken</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput [matDatepicker]="pickerStart" placeholder="Registration Date Start"
+            formControlName="date_first_registration_start">
+        <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+        <mat-datepicker #pickerStart></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput [matDatepicker]="pickerEnd" placeholder="Registration Date End"
+            formControlName="date_first_registration_end">
+        <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+        <mat-datepicker #pickerEnd></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Mileage Minimum</mat-label>
+        <input matInput type="number" formControlName="mileage_min" min="0" max="10000000">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Mileage Maximum</mat-label>
+        <input matInput type="number" formControlName="mileage_max" min="0" max="10000000">
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Color</mat-label>
+        <input matInput type="search" formControlName="colors">
+    </mat-form-field>
 </form>
