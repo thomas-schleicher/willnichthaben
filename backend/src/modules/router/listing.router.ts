@@ -92,4 +92,31 @@ listingRouter.post('/:id/images', authService.isAuthenticated, upload.single("im
     }
 });
 
+/**
+ * Route handler for fetching images associated with a listing.
+ * 
+ * @route GET /:id/images
+ * @param {string} id - The listing ID to retrieve images for.
+ * @param {Object} req - Express request object containing the listing id in the params.
+ * @param {Object} res - Express response object.
+ * @returns {Object} JSON response containing an array of images or an error message.
+ */
+listingRouter.get('/:id/images', async (req, res) => {
+    const { id } = req.params;
+
+    const parsed_listing_id = parseInt(id, 10);
+    if (isNaN(parsed_listing_id)) {
+        res.status(400).json({ message: 'Invalid ID!' });
+        return;
+    }
+    
+    try {
+        const images = await listingRepository.getImageForListing(parsed_listing_id);
+        res.json({ images: images });
+    } catch(error) {
+        res.status(500).json({ error: 'An error occurred while fetching the image for listing: ' + error });
+        return;
+    }
+});
+
 export default listingRouter;
