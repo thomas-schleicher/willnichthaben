@@ -6,6 +6,7 @@ import cors from "cors";
 import vehicleRouter from "./modules/router/vehicle.router";
 import listingRouter from "./modules/router/listing.router";
 import retailRouter from "./modules/router/retail.router";
+import path from "path";
 
 const app = express();
 const PORT = 3000;
@@ -27,6 +28,9 @@ app.use("/user", userRouter);
 app.use("/listing", listingRouter);
 app.use("/vehicle", vehicleRouter);
 app.use("/retail", retailRouter);
+
+// static route for uploaded images
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
 app.listen(PORT, () => {
   console.log(`Backend is running on port ${PORT}!`);

@@ -5,7 +5,7 @@
         <!-- Add other subheaders here -->
     </div>
     <div>
-        <!-- IMAGE WHEEL COMPONENT -->
+        <app-image-reel [listing_id]="id"></app-image-reel>
         <app-sidebar [price]="price" [seller_name]="seller_name" [address]="address"></app-sidebar>
     </div>
     <app-vehicle-description *ngIf="type === 'vehicle'" [color]="vehicle_color" [condition]="vehicle_condition" [date_of_registration]="vehicle_date_first_registered" [fuel_type]="vehicle_fuel_type" [mark]="vehicle_mark_name" [mileage]="vehicle_mileage" [model]="vehicle_model_name" [name]="vehicle_name" [type]="vehicle_type"></app-vehicle-description>

@@ -1,0 +1,21 @@
+<div class="image-reel">
+    <h3>Listing Images</h3>
+    
+    <!-- Image Upload -->
+    <input type="file" (change)="onFileSelected($event)">
+    <button (click)="uploadImage()" [disabled]="!selectedFile">Upload</button>
+  
+    <!-- Image Gallery -->
+    <div *ngIf="images.length > 0; else noImages">
+      <div class="image-container" *ngFor="let img of images">
+        <img [src]="'http://localhost:3000' + img.image_url" alt="Listing Image">
+        <button (click)="deleteImage(img.id)">🗑️</button>
+      </div>
+    </div>
+  
+    <!-- No images fallback -->
+    <ng-template #noImages>
+      <p>No images uploaded yet.</p>
+    </ng-template>
+</div>
+  

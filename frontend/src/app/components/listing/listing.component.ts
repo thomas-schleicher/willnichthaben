@@ -3,11 +3,12 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ListingService } from '../../service/listing.service';
 import { VehicleSubheaderComponent } from '../vehicle/vehicle-subheader/vehicle-subheader.component';
 import { VehicleDescriptionComponent } from '../vehicle/vehicle-description/vehicle-description.component';
-import { NgIf } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { ImageReelComponent } from '../image-reel/image-reel.component';
 
 @Component({
   selector: 'app-listing',
-  imports: [SidebarComponent, VehicleSubheaderComponent, VehicleDescriptionComponent, NgIf],
+  imports: [SidebarComponent, ImageReelComponent, VehicleSubheaderComponent, VehicleDescriptionComponent, NgIf, CommonModule],
   templateUrl: './listing.component.html',
   styleUrl: './listing.component.scss'
 })

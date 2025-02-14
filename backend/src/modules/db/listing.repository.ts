@@ -38,7 +38,7 @@ class ListingRepository {
         LEFT JOIN
             vehicle_types vtype ON l.type = 'vehicle' AND v.type_id = vtype.id
         LEFT JOIN 
-            marketplace_items m ON l.type = 'retail' AND l.id = m.id
+            retail_items ri ON l.type = 'retail' AND l.id = ri.id
         LEFT JOIN 
             real_estate_objects r ON l.type = 'property' AND l.id = r.id
         WHERE 
