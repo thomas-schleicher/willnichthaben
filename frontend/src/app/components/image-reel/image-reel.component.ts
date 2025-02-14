@@ -62,7 +62,6 @@ export class ImageReelComponent implements OnInit {
      */
     deleteImage(image_id: number) {
         this.imageService.deleteImage(image_id).subscribe(() => {
-            console.log("I'm here");
             this.images = this.images.filter(img => img.id !== image_id); // remove immediately from UI
         });
     }
