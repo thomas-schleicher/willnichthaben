@@ -1,0 +1,49 @@
+<!-- src/app/pages/chat/chat.component.html -->
+
+<div class="chat-container">
+    <!-- Sidebar: List of Chats -->
+    <div class="chat-sidebar">
+        <h3>Chats</h3>
+        <!-- Debug button -->
+        <button (click)="debugCreateChat()">Debug: Create Chat with Listing X</button>
+        <div *ngIf="loadingChats" class="loading">Loading chats...</div>
+        <ul>
+            <li *ngFor="let chat of chats" (click)="selectChat(chat)" [class.selected]="selectedChat?.id === chat.id">
+                <strong></strong> {{ chat.listing_title || 'Untitled Listing' }}
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Chat Area -->
+    <div class="chat-main">
+        <div *ngIf="!selectedChat" class="no-chat-selected">
+            <p>Please select a chat to view messages.</p>
+        </div>
+
+        <div *ngIf="selectedChat">
+            <h3>{{ selectedChat.listing_title || 'Untitled Listing' }}</h3>
+            <p class="listing-description">{{ selectedChat.listing_description }}</p>
+
+            <div class="messages" *ngIf="!loadingMessages; else loadingMessagesTpl">
+                <div *ngFor="let msg of messages" class="message">
+                    <div class="sender">{{ msg.sender_id }}</div>
+                    <div class="text">{{ msg.message }}</div>
+                    <div class="timestamp">{{ msg.created_at | date:'short' }}</div>
+                </div>
+            </div>
+            <ng-template #loadingMessagesTpl>
+                <p>Loading messages...</p>
+            </ng-template>
+
+            <div class="message-input">
+                <input
+                        type="text"
+                        [(ngModel)]="newMessage"
+                        placeholder="Type your message..."
+                        (keyup.enter)="sendMessage()"
+                />
+                <button (click)="sendMessage()" [disabled]="sendingMessage">Send</button>
+            </div>
+        </div>
+    </div>
+</div>

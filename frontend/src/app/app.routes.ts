@@ -5,7 +5,7 @@ import {RetailComponent} from './pages/retail/retail.component';
 import {RealestateComponent} from './pages/realestate/realestate.component';
 import {VehicleComponent} from './pages/vehicle/vehicle.component';
 import {ListingComponent} from './components/listing/listing.component';
-import {ChatWindowComponent} from './pages/chat-window/chat-window.component';
+import {ChatComponent} from './pages/chat/chat.component';
 
 export const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -14,5 +14,6 @@ export const routes: Routes = [
   {path: "real-estate", component: RealestateComponent},
   {path: "vehicles", component: VehicleComponent},
   {path: "listing/:id", component: ListingComponent},
-  {path: "chat", component: ChatWindowComponent}
+  {path: 'chat', component: ChatComponent},
+  {path: 'chat/:listing_id', component: ChatComponent},
 ];

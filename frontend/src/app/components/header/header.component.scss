@@ -1,4 +1,4 @@
-@import "../../../styles.scss";
+@use "../../../styles.scss";
 
 a {
     text-decoration: none;
@@ -22,7 +22,7 @@ div {
     a img {
         width: 200px;
         padding-right: 16px;
-        @include responsive() {
+        @include styles.responsive() {
             display: none;
         }
     }
@@ -38,7 +38,7 @@ div {
             a img {
                 width: 200px;
                 display: none;
-                @include responsive() {
+                @include styles.responsive() {
                     display: block;
                 }
             }
@@ -54,7 +54,7 @@ div {
                 font-size: large;
                 border-bottom: 1px solid rgb(224, 230, 240);
                 
-                @include responsive() {
+                @include styles.responsive() {
                     gap: 8px;
                     border: none;
                 }

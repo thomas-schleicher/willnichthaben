@@ -1,38 +1,45 @@
+// src/app/services/chat.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
+
+export interface Chat {
+  id: number;
+  listing_id: number;
+  listing_title: string;
+  listing_description?: string;
+  user1_id: string;
+  user2_id: string;
+  created_at: string;
+}
+
+export interface ChatMessage {
+  id: number;
+  chat_id: number;
+  sender_id: string;
+  message: string;
+  created_at: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-  private apiUrl = 'http://localhost:3000/api'; // Change this to match your backend URL
-  private activeChatId = new BehaviorSubject<number | null>(null);
-
   constructor(private http: HttpClient) {}
 
-  // Get the list of available chats
-  getChatList(): Observable<number[]> {
-    return this.http.get<number[]>(`${this.apiUrl}/chats`);
+  /** Fetch all chats for the current user */
+  getChatsForUser(): Observable<{ chats: Chat[] }> {
+    return this.http.get<{ chats: Chat[] }>('/chat');
   }
 
-  // Get messages for a specific chat
-  getMessages(chatId: number): Observable<string[]> {
-    return this.http.get<string[]>(`${this.apiUrl}/chats/${chatId}/messages`);
+  /** Fetch messages for a given listing */
+  getMessagesForListing(listingId: number): Observable<{ messages: ChatMessage[] }> {
+    return this.http.get<{ messages: ChatMessage[] }>(`/chat/${listingId}/messages`);
   }
 
-  // Send a new message to a chat
-  sendMessage(chatId: number, message: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/chats/${chatId}/messages`, { message });
-  }
-
-  // Set active chat
-  setActiveChat(chatId: number) {
-    this.activeChatId.next(chatId);
-  }
-
-  // Get the active chat ID
-  getActiveChatId(): Observable<number | null> {
-    return this.activeChatId.asObservable();
+  /** Send a new message to a chat for the given listing */
+  sendMessage(listingId: number, message: string): Observable<any> {
+    return this.http.post(`/chat/${listingId}/messages`, { message });
   }
 }
