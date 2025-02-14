@@ -8,6 +8,7 @@ import listingRouter from "./modules/router/listing.router";
 import retailRouter from "./modules/router/retail.router";
 import real_estateRouter from "./modules/router/real_estate.router";
 import chatRouter from "./modules/router/chat.router";
+import path from "path";
 
 const app = express();
 const PORT = 3000;
@@ -29,8 +30,11 @@ app.use("/user", userRouter);
 app.use("/listing", listingRouter);
 app.use("/vehicle", vehicleRouter);
 app.use("/retail", retailRouter);
-app.use("/real_estate", real_estateRouter)
-app.use("/chat", chatRouter)
+app.use("/real_estate", real_estateRouter);
+app.use("/chat", chatRouter);
+
+// static route for uploaded images
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 
 app.listen(PORT, () => {
   console.log(`Backend is running on port ${PORT}!`);
