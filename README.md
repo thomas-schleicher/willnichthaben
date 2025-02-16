@@ -1,135 +1,83 @@
 # **willnichthaben**
 
 ## **Overview**
-A clone of Willhaben designed to provide marketplaces for retail, vehicles, and real estate rentals. The application implements a responsive, user-friendly interface with robust security measures.
+A clone of Willhaben designed to provide marketplaces for retail, vehicles, and real estate rentals.
 
 ---
-
-## **Project Requirements**
-
-### **General Application Requirements**
--  **Database**: Use PostgreSQL to store data.
--  **Backend**: Implement in Node.js; expose functionality via REST API.
--  **Frontend**: Use Angular to access the REST API.
--  **Authentication**: Support user authentication.
--  **Concurrency**: Allow multiple users to access their data simultaneously.
--  **Data Privacy**: Users can only access their own data.
--  **Responsive Design**: Ensure the UI is intuitive and mobile-friendly.
--  **Security**: Use prepared statements and validate all inputs to prevent vulnerabilities.
-
-### **Documentation**
--  Document the solution in a PDF and include it with the project files.
-
----
-
 
 ## **Checklist of Functionalities**
 
-### **User Management**
-- [x] User registration (email, password, address).
-- [ ] Account maintenance (update password, address).
-- [ ] Unified user interface for both buyers and sellers.
-- [ ] Store above Data in a Postgres Table accessible by all three Marketplaces
-- [ ] Landing Page which allows to access the different Marketplaces
+### **Shared Functionality**
+- [x] Authentication. **(Thomas Schleicher)**
+- [x] Listing Previews / Detailed Listing View. **(Thomas Schleicher)**
+- [x] Image Upload / Placeholders / Image Reel. **(Elias Wassertheurer)**
+- [x] Communicate with prospective buyers/sellers (chat function). **(Raphael Walcher)**
 
 ---
 
-### Retail Marketplace
+### **Retail Marketplace** - **(Elias Wassertheurer)**
 
 #### Seller View:
 - [ ] Add, update, and delete product listings.
     - Product Properties: Name, category, description, price, delivery options, condition, pictures, and additional category-specific properties.
-- [ ] View all listings (current and sold).
-- [ ] Communicate with prospective buyers (chat-like functionality).
-- [ ] Mark listings as sold (retained in the system but hidden from buyers).
 
 #### Buyer View:
-- [ ] Browse product categories hierarchically.
-- [ ] Search products using criteria:
-    - [ ] Title/description substring.
-    - [ ] Category and subcategories.
-    - [ ] Price range.
-    - [ ] Seller address (city).
-    - [ ] Condition.
-    - [ ] Delivery method.
-    - [ ] Additional properties.
-- [ ] Open detailed product views.
-- [ ] Communicate with sellers (chat-like functionality).
+- [x] Browse product categories.
+- [x] Search products using criteria:
+    - [x] Title/description substring.
+    - [x] Category and subcategories.
+    - [x] Price range.
+    - [x] Seller address (city).
+    - [x] Condition.
+    - [x] Delivery method.
+    - [x] Additional properties.
 
 ---
 
-### **Vehicle Marketplace**
+### **Vehicle Marketplace** - **(Thomas Schleicher)**
 #### Seller View:
 - [ ] Add, update, and delete vehicle listings.
     - **Vehicle Properties**: Name, model, type, description, price, registration date, mileage, fuel type, color, condition, pictures.
-- [ ] View all listings (current and sold).
-- [ ] Communicate with prospective buyers (chat-like functionality).
-- [ ] Mark listings as sold (retained in the system but hidden from buyers).
 
 #### Buyer View:
-- [ ] Browse vehicle categories hierarchically (marks, models, types).
-- [ ] Search vehicles using criteria:
-    - [ ] Name/description substring.
-    - [ ] Mark/model hierarchy.
-    - [ ] Vehicle type.
-    - [ ] Price range.
-    - [ ] Seller address (city).
-    - [ ] Registration date, mileage, fuel type, color, condition.
-- [ ] Open detailed vehicle views.
-- [ ] Communicate with sellers (chat-like functionality).
+- [x] Browse vehicle categories (marks, models, types).
+- [x] Search vehicles using criteria:
+    - [x] Name/description substring.
+    - [x] Mark/model hierarchy.
+    - [x] Vehicle type.
+    - [x] Price range.
+    - [x] Seller address (city).
+    - [x] Registration date, mileage, fuel type, color, condition.
+- [x] Open detailed vehicle views.
 
 ---
 
-### **Real Estate Rental Marketplace**
+### **Real Estate Rental Marketplace** - **(Raphael Walcher)**
 #### Owner View:
 - [ ] Add, update, and delete real estate listings.
     - **Real Estate Properties**: Name, type, description, address (city), price, rental period, deposit, availability, pictures, additional category-specific properties.
-- [ ] View all listings (current and rented).
-- [ ] Communicate with prospective tenants (chat-like functionality).
-- [ ] Mark listings as rented (retained in the system but hidden from tenants).
 
-#### Tenant View:
-- [ ] Browse real estate categories hierarchically (provinces, cities).
-- [ ] Search real estate using criteria:
-    - [ ] Name/description substring.
-    - [ ] Real estate type.
-    - [ ] Price range.
-    - [ ] Rental period.
-    - [ ] Address (province or city).
-    - [ ] Availability.
-    - [ ] Additional properties.
-- [ ] Open detailed real estate views.
-- [ ] Communicate with owners (chat-like functionality).
+#### Buyer View:
+- [x] Browse real estate categories.
+- [x] Search real estate using criteria:
+    - [x] Name/description substring.
+    - [x] Real estate type.
+    - [x] Price range.
+    - [x] Rental period.
+    - [x] Address (province or city).
+    - [x] Availability.
+    - [x] Additional properties.
 
----
-
-## **Additional Notes**
-- All listings and categories (e.g., product, vehicle, real estate) must be pre-populated in the database where required.
-- Payments are not supported; sellers/owners manually mark listings as sold/rented.
-
----
-
-## **How to Use**
-1. Clone this repository:
-   ```bash
-   git clone <repository-url>
-   cd willnichthaben
-   ```
-2. Install dependencies for backend and frontend:
-   ```bash
-   npm install
-   ```
-3. Start the application:
-   ```bash
-   npm start
-   ```
-4. Access the application at `http://localhost:4200`.
-
----
-
-## **Planned Features (Optional Enhancements)**
-- Add user ratings for transactions.
-- Include filtering by location radius.
-- Integrate analytics for user activity.
-
----
+## **How to Run**
+To run the backend, use the following commands:
+```sh
+npm install && npm run dev
+```
+To deploy the database, use:
+```sh
+docker-compose up
+```
+To run the frontend, use:
+```sh
+ng serve
+``` 
