@@ -12,4 +12,8 @@ export class ListingService {
   getListing(listingID: number): Observable<any> {
     return this.http.get("/listing/" + listingID.toString());
   }
+  
+  getUserListings(): Observable<any> {
+    return this.http.get("/listing");
+  }
 }

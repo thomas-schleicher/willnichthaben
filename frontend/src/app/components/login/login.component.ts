@@ -22,7 +22,6 @@ export class LoginComponent {
       const { email, password } = this.loginForm.value;
       this.authService.login(email!, password!).subscribe({
         next: (res) => {
-          //todo: add more login logic (redirect etc...)
           const { message } = res;
           alert(message);
         },

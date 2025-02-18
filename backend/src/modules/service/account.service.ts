@@ -18,6 +18,11 @@ class AccountService {
         const userCreated = await userRepository.createUser(user, address);
         return userCreated;
     }
+
+    async changePassword(userID: string, newPassword: string): Promise<boolean> {
+        const passwordHash = await bcrypt.hash(newPassword, 10);
+        return userRepository.changePassword(userID, passwordHash); 
+    }
 }
 
 export default new AccountService();

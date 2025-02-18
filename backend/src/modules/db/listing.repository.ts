@@ -5,7 +5,7 @@ class ListingRepository {
   async getListingByID(listingID: number): Promise<any | null> {
     //todo: machts da eure sachen so wie ihr sie brauchts auch rein
     const query = `
-        SELECT 
+        SELECT
             l.title,
             l.description,
             l.price,
@@ -61,54 +61,95 @@ class ListingRepository {
     return rows[0].seller_id;
   }
 
+  async getUserListings(userID: string): Promise<any> {
+    const query = `
+        SELECT 
+            l.id,
+            l.type,
+            l.title,
+            l.description,
+            l.price,
+            l.is_sold,
+            v.name AS vehicle_name,
+            v.model_id AS vehicle_model_id,
+            v.type_id AS vehicle_type_id,
+            v.date_first_registration AS vehicle_date_first_registration,
+            v.mileage AS vehicle_mileage,
+            v.fuel_type AS vehicle_fule_type,
+            v.color AS vehicle_color,
+            v.condition AS vehicle_condition,
+            i.type_id AS real_estate_type_id,
+            i.description AS real_estate_description,
+            i.city_id AS real_estate_city_id,
+            i.address AS real_estate_address,
+            i.price_per_month AS real_estate_price_per_month,
+            i.renting_period AS real_estate_renting_period,
+            i.advance_payment AS real_estate_advanced_payment,
+            i.immediate_availability AS real_estate_immediate_availability,
+            i.status AS real_estate_status,
+            r.name AS retail_name,
+            r.category_id AS retail_category_id,
+            r.delivery_options AS retail_delivery_options,
+            r.condition AS retail_condition
+        FROM listings AS l
+        LEFT JOIN vehicles AS v ON l.id = v.listing_id
+        LEFT JOIN real_estate_objects AS i ON l.id = i.listing_id
+        LEFT JOIN retail_items AS r ON l.id = r.listing_id
+        WHERE l.seller_id = $1
+    `;
+
+    const { rows } = await pool.query(query, [userID]);
+    return rows;
+  }
+
   /**
    * Creates a new image for a listing in the database.
-   * 
+   *
    * This function validates the input data against predefined schemas and inserts the image
    * to its associated listing into the database within a transaction.
    * If an error occurs during insertion, the transaction is rolled back.
-   * 
+   *
    * @param {number} listing_id - The ID of the listing to associate the image with.
    * @param {string} image_url - The URL of the image to be stored.
    * @throws {Error} If validation fails or a database error occurs.
    */
-  async createImageForListing(listing_id: number, image_url: string): Promise<void> {
+  async createImageForListing(
+    listing_id: number,
+    image_url: string
+  ): Promise<void> {
     // validate image data
     const imageValidation = listingImageShema.validate({
-        listing_id: listing_id,
-        image_url: image_url
+      listing_id: listing_id,
+      image_url: image_url,
     });
 
     try {
-        // begin transaction
-        await pool.query("BEGIN");
+      // begin transaction
+      await pool.query("BEGIN");
 
-        // SQL query to insert listing image
-        const query = `
+      // SQL query to insert listing image
+      const query = `
         INSERT INTO listing_images
             (listing_id, image_url)
         VALUES
             ($1, $2);
         `;
 
-        // execute listing image insertion
-        await pool.query(query, [
-            listing_id,
-            image_url
-        ]);
+      // execute listing image insertion
+      await pool.query(query, [listing_id, image_url]);
 
-        // commit transaction if query succeeds
-        await pool.query("COMMIT");
+      // commit transaction if query succeeds
+      await pool.query("COMMIT");
     } catch (error) {
-        // rollback transaction in case of an error
-        await pool.query("ROLLBACK");
-        console.error("Error during listing image creation: ", error);
+      // rollback transaction in case of an error
+      await pool.query("ROLLBACK");
+      console.error("Error during listing image creation: ", error);
     }
   }
 
   /**
    * Fetches an image from a listing in the database.
-   * 
+   *
    * @param {number} listing_id - The ID of the listing to associate the image with.
    * @returns {any[]} The corresponding images to a listing
    */
@@ -121,25 +162,25 @@ class ListingRepository {
     `;
 
     // execute listing image fetching
-    const images = await pool.query(query, [ listing_id ]);
+    const images = await pool.query(query, [listing_id]);
 
     // return the resulting datasets
     return images.rows;
   }
 
   /**
-    * Deletes an image from the listing_images table based on its ID.
-    * 
-    * @param {number} image_id - The ID of the image to be deleted
-    * @returns {any} - The deleted image record containing the image URL
-    */
+   * Deletes an image from the listing_images table based on its ID.
+   *
+   * @param {number} image_id - The ID of the image to be deleted
+   * @returns {any} - The deleted image record containing the image URL
+   */
   async deleteImageOfListing(image_id: number): Promise<any> {
     try {
-        // begin transaction
-        await pool.query("BEGIN");
+      // begin transaction
+      await pool.query("BEGIN");
 
-        // SQL query to delete listing image
-        const query = `
+      // SQL query to delete listing image
+      const query = `
         DELETE FROM listing_images
         WHERE
             id = $1
@@ -147,26 +188,26 @@ class ListingRepository {
             image_url; 
         `;
 
-        // execute listing image fetching
-        const imageToDelete = await pool.query(query, [ image_id ]);
+      // execute listing image fetching
+      const imageToDelete = await pool.query(query, [image_id]);
 
-        // commit transaction if query succeeds
-        await pool.query("COMMIT");
+      // commit transaction if query succeeds
+      await pool.query("COMMIT");
 
-        return imageToDelete;
+      return imageToDelete;
     } catch (error) {
-        // rollback transaction in case of an error
-        await pool.query("ROLLBACK");
-        console.error("Error during listing image creation: ", error);
+      // rollback transaction in case of an error
+      await pool.query("ROLLBACK");
+      console.error("Error during listing image creation: ", error);
     }
   }
 
   /**
    * Retrieves the listing ID associated with a given image ID.
-   * 
+   *
    * This function executes a SQL query to fetch the corresponding listing ID
    * from the listing_images table based on the provided image ID.
-   * 
+   *
    * @async
    * @param {number} image_id - The ID of the image for which the listing ID is to be retrieved
    * @returns {any} - The ID of the listing associated with the image
@@ -180,7 +221,7 @@ class ListingRepository {
     `;
 
     // execute listing id by image id fetching
-    const result = await pool.query(query, [ image_id ]);
+    const result = await pool.query(query, [image_id]);
 
     // return the resulting datasets
     return result.rows[0].listing_id;

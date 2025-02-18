@@ -59,6 +59,7 @@ create table real_estate_object_properties
 create table real_estate_objects
 (
     id                     serial primary key,
+    listing_id             INT NOT NULL REFERENCES listings(id) ON DELETE CASCADE,
     name                   varchar(100) not null,
     type_id                int          not null references real_estate_types (id),
     description            text,
