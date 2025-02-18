@@ -2,6 +2,17 @@ import { listingImageShema } from "../../interfaces/listing.interface";
 import pool from "../config/postgres.config";
 
 class ListingRepository {
+  async deleteListing(listingID: number, userID: string): Promise<boolean> {
+    const query = "DELETE FROM listings WHERE id = $1 AND seller_id = $2";
+    try {
+      await pool.query(query, [listingID, userID]);
+    } catch (err) {
+      console.error("Error:", err);
+      return false;
+    }
+    return true;
+  }
+
   async getListingByID(listingID: number): Promise<any | null> {
     //todo: machts da eure sachen so wie ihr sie brauchts auch rein
     const query = `

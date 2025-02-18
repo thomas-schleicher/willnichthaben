@@ -33,9 +33,35 @@ listingRouter.get('/', authService.isAuthenticated, async (req, res) => {
     }
 
     const listings = await listingRepository.getUserListings(userID);
+    if (!listings) {
+        res.status(500).json({ error: "Error fetching user listings" });
+        return;
+    }
     res.status(200).json(listings);
 });
 
+listingRouter.delete('/:id', authService.isAuthenticated, async (req, res) => {
+    const userID = sessionService.getSessionUserID(req);
+    if (!userID) {
+        res.status(500).json({error: "This should never happen" });
+        return;
+    }
+
+    const listingID = Number(req.params.id);
+    if (isNaN(listingID)) {
+        res.status(500).json({ error: "Listing ID is not provided or not a number"});
+        return;
+    }
+
+    const result = await listingRepository.deleteListing(Number(listingID), userID);
+
+    if (result) {
+        res.status(200).json({});
+    } else {
+        res.status(500).json({});
+    }
+    
+});
 
 /****************************
  *                          *
