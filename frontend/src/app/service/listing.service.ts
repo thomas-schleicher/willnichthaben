@@ -12,8 +12,14 @@ export class ListingService {
   getListing(listingID: number): Observable<any> {
     return this.http.get("/listing/" + listingID.toString());
   }
-  
+
+  getListingAuthenticated(listingID: number): Observable<any> {
+    return this.http.get("/listing/auth/" + listingID.toString());
+  }
+
   getUserListings(): Observable<any> {
     return this.http.get("/listing");
   }
+
+  // TODO: create logic to save
 }

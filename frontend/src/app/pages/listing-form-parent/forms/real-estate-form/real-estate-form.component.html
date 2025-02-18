@@ -1,0 +1,18 @@
+<form [formGroup]="realEstateForm" (ngSubmit)="onSubmit()">
+  <div class="form-field">
+    <label for="propertyName">Property Name</label>
+    <input id="propertyName" type="text" formControlName="propertyName" />
+  </div>
+
+  <div class="form-field">
+    <label for="address">Address</label>
+    <input id="address" type="text" formControlName="address" />
+  </div>
+
+  <div class="form-field">
+    <label for="price">Price</label>
+    <input id="price" type="text" formControlName="price" />
+  </div>
+
+  <button type="submit" [disabled]="realEstateForm.invalid">Submit</button>
+</form>

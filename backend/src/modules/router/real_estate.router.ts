@@ -24,7 +24,7 @@ real_estate.get('/brands', validateQuery(vehicleQuerySchema), async (req, res) =
         const brands = await VehicleRepository.getBrands(filters);
         res.json({ brands: brands});
     } catch (error) {
-        res.status(500).json({ error: 'An error occured while fetching vehicle brands.'});
+        res.status(500).json({ error: 'An error occurred while fetching vehicle brands.'});
     }
 });
 
