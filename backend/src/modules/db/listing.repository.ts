@@ -98,7 +98,8 @@ class ListingRepository {
         WHERE l.seller_id = $1
     `;
 
-    return await pool.query(query, [userID]);
+    const { rows } = await pool.query(query, [userID]);
+    return rows;
   }
 
   /**

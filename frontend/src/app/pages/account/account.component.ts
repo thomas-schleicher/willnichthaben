@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import {
   FormControl,
@@ -12,17 +12,21 @@ import { MatInputModule } from '@angular/material/input';
 import { UserService } from '../../service/user.service';
 import { AuthService } from '../../service/auth.service';
 import { LoginComponent } from '../../components/login/login.component';
+import { ListingPreviewComponent } from "../../components/listing-preview/listing-preview.component";
+import { ListingService } from '../../service/listing.service';
 
 @Component({
   selector: 'app-account',
   imports: [
     NgIf,
+    NgFor,
     MatCardModule,
     ReactiveFormsModule,
     MatInputModule,
     MatFormFieldModule,
     LoginComponent,
-  ],
+    ListingPreviewComponent
+],
   templateUrl: './account.component.html',
   styleUrl: './account.component.scss',
 })
@@ -37,12 +41,18 @@ export class AccountComponent {
     street_address: new FormControl("", [Validators.required])
   });
 
-  constructor(private userService: UserService, private authService: AuthService) {}
+  listings: any[] = [];
+
+  constructor(private userService: UserService, private authService: AuthService, private listingService: ListingService) {}
 
   ngOnInit() {
     this.authService.isAuthenticated().subscribe((status) => {
       this.authenticated = status.status;
-    });    
+    });
+
+    this.listingService.getUserListings().subscribe((listings) => {
+      this.listings = listings;
+    })
   }
 
   changePassword() {
