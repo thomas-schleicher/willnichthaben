@@ -7,10 +7,13 @@ export interface User {
     address_id?: string,
 }
 
+export const userIDShema = Joi.string().uuid();
+
+export const passwordShema = Joi.string().min(8).required(); 
+
 export const userShema = Joi.object({
-    id: Joi.string().uuid(),
+    id: userIDShema,
     email: Joi.string().email().required(),
-    password: Joi.string().min(8).required(),
+    password: passwordShema,
     address_id: Joi.string().uuid(),
 });
-
