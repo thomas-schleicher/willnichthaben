@@ -30,7 +30,7 @@ export class AuthService {
     });
   }
 
-  isAuthenticated(): Observable<any> {
-    return this.http.get("/auth");
+  isAuthenticated(): Observable<{status: boolean}> {
+    return this.http.get<{status: boolean}>("/auth");
   }
 }

@@ -9,11 +9,11 @@ import { addressShema } from "../../interfaces/address.interface";
 const authRouter = Router();
 
 authRouter.get("/", (req, res) => {
-    if (!req.session.userID) {
-        res.status(200).json({ status: "unauthenticated" });
+    if (req.session.userID) {
+        res.status(200).json({ status: true });
         return;
     }
-    res.status(200).json({ status: "authenticated" });
+    res.status(200).json({ status: false });
 });
 
 authRouter.post('/login', async (req, res) => {
