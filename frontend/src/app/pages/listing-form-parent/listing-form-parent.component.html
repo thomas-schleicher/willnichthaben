@@ -1,0 +1,41 @@
+<div class="button-container">
+  <button
+    [class.active]="selectedForm === 'retailForm'"
+    [disabled]="isModifyMode"
+    (click)="onSelectForm('retailForm')">
+    Retail Item
+  </button>
+  <button
+    [class.active]="selectedForm === 'realEstateForm'"
+    [disabled]="isModifyMode"
+    (click)="onSelectForm('realEstateForm')">
+    Real Estate
+  </button>
+  <button
+    [class.active]="selectedForm === 'vehicleForm'"
+    [disabled]="isModifyMode"
+    (click)="onSelectForm('vehicleForm')">
+    Vehicle
+  </button>
+</div>
+
+<div class="form-container">
+  <ng-container [ngSwitch]="selectedForm">
+    <app-retail-form
+      *ngSwitchCase="'retailForm'"
+      [data]="listingData"
+      [modifyMode]="isModifyMode">
+    </app-retail-form>
+    <app-real-estate-form
+      *ngSwitchCase="'realEstateForm'"
+      [data]="listingData"
+      [modifyMode]="isModifyMode">
+    </app-real-estate-form>
+    <app-vehicle-form
+      *ngSwitchCase="'vehicleForm'"
+      [data]="listingData"
+      [modifyMode]="isModifyMode">
+    </app-vehicle-form>
+    <div *ngSwitchDefault>Please select a form.</div>
+  </ng-container>
+</div>
