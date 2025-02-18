@@ -25,6 +25,17 @@ listingRouter.get('/:id', async (req, res) => {
     res.status(200).json(listing);
 });
 
+listingRouter.get('/', authService.isAuthenticated, async (req, res) => {
+    const userID = sessionService.getSessionUserID(req);
+    if (!userID) {
+        res.status(500).json({error: "This should never happen" });
+        return;
+    }
+
+    const listings = await listingRepository.getUserListings(userID);
+    res.status(200).json(listings);
+});
+
 
 /****************************
  *                          *
