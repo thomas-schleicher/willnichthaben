@@ -14,6 +14,7 @@ import { AuthService } from '../../service/auth.service';
 import { LoginComponent } from '../../components/login/login.component';
 import { ListingPreviewComponent } from "../../components/listing-preview/listing-preview.component";
 import { ListingService } from '../../service/listing.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-account',
@@ -31,6 +32,7 @@ import { ListingService } from '../../service/listing.service';
   styleUrl: './account.component.scss',
 })
 export class AccountComponent {
+
   authenticated: any;
   passwordForm = new FormGroup({
     password: new FormControl("", [Validators.required, Validators.minLength(8)])
@@ -43,7 +45,7 @@ export class AccountComponent {
 
   listings: any[] = [];
 
-  constructor(private userService: UserService, private authService: AuthService, private listingService: ListingService) {}
+  constructor(private userService: UserService, private authService: AuthService, private listingService: ListingService, private router: Router) {}
 
   ngOnInit() {
     this.authService.isAuthenticated().subscribe((status) => {
@@ -61,7 +63,9 @@ export class AccountComponent {
       if (!password) return;
       this.userService
         .changePassword(password)
-        .subscribe();
+        .subscribe(() => {
+          this.ngOnInit();
+        });
     }
   }
 
@@ -69,8 +73,28 @@ export class AccountComponent {
     if (this.addressForm.valid) {
       const { city, street_address, postal_code } = this.addressForm.value;
       if (city && street_address && postal_code) {
-        this.userService.changeAddress(city, postal_code, street_address).subscribe();
+        this.userService.changeAddress(city, postal_code, street_address).subscribe(() => {
+          this.ngOnInit();
+        });
       }
     }
+  }
+  
+  deleteListing(listingID: string | number) {
+    const id = Number(listingID);
+    if (isNaN(id)) return;
+    this.listingService.deleteListing(id).subscribe(() => {
+      this.ngOnInit();
+    })
+  }
+
+  modifyListing(listingID: string | number) {
+    const id = Number(listingID);
+    if (isNaN(id)) return;
+    this.router.navigate(["listings/modify/" + id.toString()]);
+  }
+
+  createListing() {
+    this.router.navigate(["listings/create"]);
   }
 }

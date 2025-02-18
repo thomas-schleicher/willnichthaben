@@ -35,7 +35,7 @@
 
     <div>
         <h1>Your Listings</h1>
-        <button>Create new Listing</button>
+        <button (click)="createListing()">Create new Listing</button>
         <div *ngFor="let listing of listings">
             <mat-card appearance="outlined">
                 <app-listing-preview 
@@ -47,8 +47,8 @@
                     [mileage]="listing.vehicle_mileage"
                     [condition]="listing.vehicle_condition">
                 </app-listing-preview>
-                <button>Modify</button>
-                <button>Delete</button>
+                <button (click)="modifyListing(listing.id)">Modify</button>
+                <button (click)="deleteListing(listing.id)">Delete</button>
             </mat-card>
         </div>
     </div>

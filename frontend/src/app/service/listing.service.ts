@@ -21,5 +21,9 @@ export class ListingService {
     return this.http.get("/listing");
   }
 
+  deleteListing(listingID: number): Observable<any> {
+    return this.http.delete("/listing/" + listingID.toString());
+  }
+
   // TODO: create logic to save
 }

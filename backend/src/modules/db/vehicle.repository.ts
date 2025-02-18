@@ -57,7 +57,7 @@ class VehicleRepository {
         JOIN listings l ON l.id = v.listing_id
         JOIN vehicle_models vm ON v.model_id = vm.id
         JOIN vehicle_marks vb ON vm.mark_id = vb.id
-        WHERE vb.category_id = $1
+        WHERE vb.category_id = $1 AND l.is_sold = FALSE
     `;
 
     const queryParams: any[] = [category_id];
