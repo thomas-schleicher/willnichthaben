@@ -1,1 +1,87 @@
-<p>vehicle-form works!</p>
+<form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+    <div>
+        <mat-button-toggle-group formControlName="category_id">
+            <mat-button-toggle value="1">Cars</mat-button-toggle>
+            <mat-button-toggle value="2">Motorbikes</mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+    <div>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>Vehicle Brands</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div formGroupName="brandFilter">
+                <div *ngFor="let brand of brands">
+                    <mat-checkbox [formControlName]="brand.id">{{brand.name}}</mat-checkbox>
+                </div>
+            </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>Vehicle Models</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div formGroupName="modelFilter">
+                <div *ngFor="let model of models">
+                    <mat-checkbox [formControlName]="model.id">{{model.name}}</mat-checkbox>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </div>
+    <div>
+        <mat-form-field appearance="outline">
+            <mat-label>Vehicle Type</mat-label>
+            <mat-select formControlName="type_id">
+                <mat-option [value]="1">Limousine</mat-option>
+                <mat-option [value]="2">SUV Geländewagen</mat-option>
+                <mat-option [value]="3">Kombi Family Van</mat-option>
+                <mat-option [value]="4">Klein- und Kompaktwagen</mat-option>
+                <mat-option [value]="5">Sportwagen Coupe</mat-option>
+                <mat-option [value]="6">Cabrio Roadster</mat-option>
+                <mat-option [value]="7">Kleinbus</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Fule Type</mat-label>
+            <mat-select formControlName="fuel_type">
+                <mat-option [value]="'diesel'">Diesel</mat-option>
+                <mat-option [value]="'benzin'">Benzin</mat-option>
+                <mat-option [value]="'electric'">Electric</mat-option>
+                <mat-option [value]="'hybrid'">Hybrid</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Condition</mat-label>
+            <mat-select formControlName="condition">
+                <mat-option [value]="'new'">New</mat-option>
+                <mat-option [value]="'used'">Used</mat-option>
+                <mat-option [value]="'broken'">Broken</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field>
+            <input matInput [matDatepicker]="picker" placeholder="Registration Date End"
+                formControlName="date_first_registration">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <div class="form-field">
+        <label for="name">Name</label>
+        <input id="name" type="text" formControlName="name" />
+    </div>
+    <div class="form-field">
+        <label for="mileage">Mileage</label>
+        <input id="mileage" type="number" formControlName="mileage" />
+    </div>
+    <div class="form-field">
+        <label for="color">Color</label>
+        <input id="color" type="text" formControlName="color" />
+    </div>
+    <div class="form-field">
+        <label for="price">Price</label>
+        <input id="price" type="text" formControlName="price" />
+    </div>
+
+    <button type="submit" [disabled]="vehicleForm.invalid">Submit</button>
+</form>

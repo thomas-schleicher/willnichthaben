@@ -70,14 +70,20 @@ vehicleRouter.put('/', authService.isAuthenticated, async (req, res) => {
     }
 
     try {
+
         const listing_user_uuid = await listingRepository.getUserIDByListingID(parsed_listing_id);
         if (listing_user_uuid !== userID) {
             res.status(403).json({ error: 'You are not authorized to modify this listing' });
             return;
         }
 
+        console.log(req.body, listing_id, userID);
+
         await VehicleRepository.updateVehicle(req.body, listing_id, userID);
         res.status(200).json({ message: 'Vehicle listing updated successfully' });
+
+        console.log("after");
+
     } catch (error) {
         res.status(500).json({ error: 'An error occurred while updating the vehicle listing: ' + error });
         return;

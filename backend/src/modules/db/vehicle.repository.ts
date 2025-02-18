@@ -300,10 +300,12 @@ class VehicleRepository {
     });
 
     if (listingValidation.error) {
-      throw new Error("Validation error: " + listingValidation.error.message);
+      console.error("Validation error: " + listingValidation.error.message);
+      throw new Error();
     }
     if (vehicleValidation.error) {
-      throw new Error("Validation error: " + vehicleValidation.error.message);
+      console.error("Validation error: " + vehicleValidation.error.message);
+      throw new Error();
     }
 
     try {

@@ -17,23 +17,26 @@ class ListingRepository {
     //todo: machts da eure sachen so wie ihr sie brauchts auch rein
     const query = `
         SELECT
+            l.id,
+            l.type,
             l.title,
             l.description,
             l.price,
-            l.type,
+            l.is_sold,
+            v.name AS vehicle_name,
+            v.model_id AS vehicle_model_id,
+            v.type_id AS vehicle_type_id,
+            v.date_first_registration AS vehicle_date_first_registration,
+            v.mileage AS vehicle_mileage,
+            v.fuel_type AS vehicle_fule_type,
+            v.color AS vehicle_color,
+            v.condition AS vehicle_condition,
+            vmark.category_id AS vehicle_category_id,
+            vmark.id AS vehicle_brand_id,
             u.email AS user_email,
             a.postal_code AS postal_code,
             a.city,
-            a.street_address,
-            v.name AS vehicle_name,
-            v.date_first_registration AS vehicle_date_first_registered,
-            v.mileage AS vehicle_mileage,
-            v.fuel_type AS vehicle_fuel_type,
-            v.color AS vehicle_color,
-            v.condition AS vehicle_condition,
-            vmodel.name AS vehicle_model_name,
-            vmark.name AS  vehicle_mark_name,
-            vtype.name AS vehicle_type
+            a.street_address
         FROM
             listings l
         LEFT JOIN
@@ -89,6 +92,8 @@ class ListingRepository {
             v.fuel_type AS vehicle_fule_type,
             v.color AS vehicle_color,
             v.condition AS vehicle_condition,
+            vb.category_id AS vehicle_category_id,
+            vb.id AS vehicle_brand_id,
             i.type_id AS real_estate_type_id,
             i.description AS real_estate_description,
             i.city_id AS real_estate_city_id,
@@ -103,7 +108,11 @@ class ListingRepository {
             r.delivery_options AS retail_delivery_options,
             r.condition AS retail_condition
         FROM listings AS l
-        LEFT JOIN vehicles AS v ON l.id = v.listing_id
+        LEFT JOIN 
+          (vehicles AS v
+            JOIN vehicle_models vm ON v.model_id = vm.id
+            JOIN vehicle_marks vb ON vm.mark_id = vb.id) 
+          ON l.id = v.listing_id
         LEFT JOIN real_estate_objects AS i ON l.id = i.listing_id
         LEFT JOIN retail_items AS r ON l.id = r.listing_id
         WHERE l.seller_id = $1
