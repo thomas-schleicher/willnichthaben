@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { validateQuery } from '../middleware/query-validation.middleware';
+import { retailQuerySchema } from '../../interfaces/retail/retail_item.interface';
 
 import authService from '../service/auth.service';
 import sessionService from '../service/session.service';
@@ -6,6 +8,23 @@ import retailRepository from "../db/retail.repository";
 import listingRepository from '../db/listing.repository';
 
 const retailRouter = Router();
+
+/**
+ * Route to fetch a listing based on set filters.
+ * 
+ * @route GET /
+ * @param {Object} req - Express request object containing the filter data in the query.
+ * @param {Object} res - Express response object.
+ */
+retailRouter.get('/', validateQuery(retailQuerySchema), async (req, res) => {
+    try {
+        const filters = req.query;
+        const retail_items = await retailRepository.getRetailListing(filters);
+        res.json({ retail_items: retail_items });
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while fetching retail item listings.' });
+    } 
+});
 
 /**
  * Route to create a new retail listing.

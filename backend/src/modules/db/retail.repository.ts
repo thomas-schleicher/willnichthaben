@@ -5,6 +5,69 @@ import pool from "../config/postgres.config";
 
 class RetailRepository {
     /**
+     * Fetches retail listings from the database based on the provided filters.
+     * 
+     * @param filters - The filters to apply to the query.
+     * @returns - Returns an array of matching retail listings.
+     */
+    async getRetailListing(filters: any): Promise<number[]> {
+        let {
+            category_id,
+            price_min,
+            price_max,
+            delivery_options,
+            conditions
+        } = filters;
+
+        // ensure that conditions is always an array
+        if (conditions && !Array.isArray(conditions)) {
+            conditions = [conditions];
+        }
+
+        // SQL query to fetch listing
+        let query = `
+        SELECT 
+            l.id AS listing_id,
+            l.type,
+            l.title,
+            l.price,
+            r.category_id,
+            r.delivery_options,
+            r.condition
+        FROM retail_items r
+        JOIN listings l ON l.id = r.listing_id
+        JOIN retail_categories rc ON r.category_id = rc.id
+        WHERE r.category_id = $1 AND l.is_sold = FALSE
+        `;
+
+        const queryParams: any[] = [category_id];
+
+        // apply other filters if provided
+        if (price_min !== undefined) {
+            query += ` AND l.price >= $${queryParams.length + 1}`;
+            queryParams.push(price_min);
+        }
+
+        if (price_max !== undefined) {
+            query += ` AND l.price <= $${queryParams.length + 1}`;
+            queryParams.push(price_max);
+        }
+
+        if (delivery_options && delivery_options.length > 0) {
+            query += ` AND r.delivery_options = $${queryParams.length + 1}`;
+            queryParams.push(delivery_options);
+        }
+
+        if (conditions && conditions.length > 0) {
+            query += ` AND r.condition = ANY($${queryParams.length + 1})`;
+            queryParams.push(conditions);
+        }
+
+        const result = await pool.query(query, queryParams);
+        return result.rows;
+    }
+
+    /**
      * Creates a new retail listing in the database.
      * 
      * This function validates the input data against predefined schemas and inserts the listing
@@ -95,7 +158,7 @@ class RetailRepository {
 
             // commit transaction if both queries succeed
             await pool.query("COMMIT");
-        } catch(error) {
+        } catch (error) {
             // rollback transaction in case of an error
             await pool.query("ROLLBACK");
             console.error("Error during retail item creation: ", error);
@@ -114,7 +177,7 @@ class RetailRepository {
      * @param {string} listing_id - The ID of the listing to be updated.
      * @throws {Error} If validation fails or a database error occurs.
      */
-    async updateRetailListing(body: any, user_id: string, listing_id: string): Promise <void> {
+    async updateRetailListing(body: any, user_id: string, listing_id: string): Promise<void> {
         const {
             // listing data
             type,
@@ -201,10 +264,10 @@ class RetailRepository {
 
             // commit transaction if both queries succeed
             await pool.query("COMMIT");
-        } catch(error) {
+        } catch (error) {
             // rollback transaction in case of an error
             await pool.query("ROLLBACK");
-            console.error("Error during retail item update: ", error);    
+            console.error("Error during retail item update: ", error);
         }
     }
 
@@ -213,7 +276,7 @@ class RetailRepository {
      * 
      * @param {number} listing_id - The ID of the listing to delete.
      */
-    async deleteRetailListing(listing_id: string): Promise <void> {
+    async deleteRetailListing(listing_id: string): Promise<void> {
         try {
             await pool.query("BEGIN");
 
@@ -237,12 +300,12 @@ class RetailRepository {
 
             // commit transaction if both queries succeed
             await pool.query("COMMIT");
-        } catch(error) {
+        } catch (error) {
             // rollback transaction in case of an error
             await pool.query("ROLLBACK");
             console.error("Error during retail item delete: ", error);
         }
-    } 
+    }
 }
 
 export default new RetailRepository();
