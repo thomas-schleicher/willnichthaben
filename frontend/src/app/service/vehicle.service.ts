@@ -80,7 +80,7 @@ export class VehicleService {
     });
   }
 
-  updateVehicleListing(listing_id: number, category_id: number, price: number, model_id: number, type_id: number, date_first_registration: string, mileage: number, fuel_type: string, color: string, condition: string, type: string, name: string): Observable<any> {
+  updateVehicleListing(listing_id: number, category_id: number, price: number, model_id: number, type_id: number, date_first_registration: string, mileage: number, fuel_type: string, color: string, condition: string, type: string, name: string, title: string, description: string): Observable<any> {
     return this.http.put("/vehicle", {
       category_id: category_id,
       type: type,
@@ -94,6 +94,25 @@ export class VehicleService {
       color: color,
       condition: condition,
       name: name,
+      title: title,
+      description: description,
     })
+  }
+
+  createVehicle(price: number, model_id: number, type_id: number, date_first_registration: string, mileage: number, fuel_type: string, color: string, condition: string, type: string, name: string, title: string, description: string): Observable<any> {
+    return this.http.post("/vehicle", {
+      type: type,
+      price: price,
+      model_id: model_id,
+      type_id: type_id,
+      date_first_registration: date_first_registration,
+      mileage: mileage,
+      fuel_type: fuel_type,
+      color: color,
+      condition: condition,
+      name: name,
+      title: title,
+      description: description,
+    });
   }
 }
