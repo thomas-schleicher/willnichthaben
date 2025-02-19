@@ -31,6 +31,10 @@ class ListingRepository {
             v.fuel_type AS vehicle_fule_type,
             v.color AS vehicle_color,
             v.condition AS vehicle_condition,
+            ri.name AS retail_name,
+            ri.category_id AS retail_category_id,
+            ri.delivery_options AS retail_delivery_options,
+            ri.condition AS retail_condition,
             vmark.category_id AS vehicle_category_id,
             vmark.id AS vehicle_brand_id,
             u.email AS user_email,
@@ -53,6 +57,12 @@ class ListingRepository {
             vehicle_types vtype ON l.type = 'vehicle' AND v.type_id = vtype.id
         LEFT JOIN 
             retail_items ri ON l.type = 'retail' AND l.id = ri.id
+        LEFT JOIN
+            retail_categories rc ON l.type = 'retail' AND ri.category_id = rc.id
+        LEFT JOIN
+            retail_categories_properties rcp ON l.type = 'retail' AND rc.id = rcp.id
+        LEFT JOIN
+            retail_item_properties rip ON l.type = 'retail' AND ri.id = rip.retail_item_id AND rcp.id = rip.additional_property_id
         LEFT JOIN 
             real_estate_objects r ON l.type = 'property' AND l.id = r.id
         WHERE 
@@ -114,7 +124,12 @@ class ListingRepository {
             JOIN vehicle_marks vb ON vm.mark_id = vb.id) 
           ON l.id = v.listing_id
         LEFT JOIN real_estate_objects AS i ON l.id = i.listing_id
-        LEFT JOIN retail_items AS r ON l.id = r.listing_id
+        LEFT JOIN 
+          (retail_items AS r
+            LEFT JOIN retail_categories rc ON r.category_id = rc.id
+            LEFT JOIN retail_categories_properties rcp ON rc.id = rcp.id
+            LEFT JOIN retail_item_properties rip ON r.id = rip.retail_item_id AND rcp.id = rip.additional_property_id)
+          ON l.id = r.listing_id
         WHERE l.seller_id = $1
     `;
 
