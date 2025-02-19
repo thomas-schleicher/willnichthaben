@@ -82,6 +82,13 @@
         <label for="price">Price</label>
         <input id="price" type="text" formControlName="price" />
     </div>
-
+    <div class="form-field">
+        <label for="title">Title</label>
+        <input id="title" type="text" formControlName="title" />
+    </div>
+    <div class="form-field">
+        <label for="description">Description</label>
+        <input id="description" type="text" formControlName="description" />
+    </div>
     <button type="submit" [disabled]="vehicleForm.invalid">Submit</button>
 </form>
