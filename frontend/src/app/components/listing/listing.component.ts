@@ -50,9 +50,9 @@ export class ListingComponent {
       this.description = listing.description;
       
       this.vehicle_name = listing.vehicle_name;
-      this.vehicle_date_first_registered = listing.vehicle_date_first_registered;
+      this.vehicle_date_first_registered = listing.vehicle_date_first_registration;
       this.vehicle_mileage = listing.vehicle_mileage;
-      this.vehicle_fuel_type = listing.vehicle_fuel_type;
+      this.vehicle_fuel_type = listing.vehicle_fule_type;
       this.vehicle_color = listing.vehicle_color;
       this.vehicle_condition = listing.vehicle_condition;
       this.vehicle_model_name = listing.vehicle_model_name;
