@@ -1,87 +1,127 @@
 import { Router } from 'express';
 import { validateQuery } from '../middleware/query-validation.middleware';
-import VehicleRepository from '../db/vehicle.repository';
-import { vehicleQuerySchema } from '../../interfaces/vehicle/vehicle.interface';
+import RealEstateRepository from '../db/real_estate.repository';
+import { realEstateQuerySchema } from '../../interfaces/real-estate/real-estate-object.validator';
 import authService from '../service/auth.service';
 import sessionService from '../service/session.service';
 import listingRepository from '../db/listing.repository';
 
-const real_estate = Router();
+const realEstateRouter = Router();
 
-real_estate.get('/', validateQuery(vehicleQuerySchema), async (req, res) => {
+realEstateRouter.get('/', validateQuery(realEstateQuerySchema), async (req, res) => {
     try {
         const filters = req.query;
-        const vehicles = await VehicleRepository.getVehicles(filters);
-        res.json({ vehicles: vehicles });
+        const listings = await RealEstateRepository.getRealEstateObjects(filters);
+        res.json({ listings });
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while fetching vehicle listings.' });
+        res.status(500).json({ error: 'An error occurred while fetching real estate listings.' });
     }
 });
 
-real_estate.get('/brands', validateQuery(vehicleQuerySchema), async (req, res) => {
+realEstateRouter.get('/types', async (req, res) => {
     try {
-        const filters = req.query;
-        const brands = await VehicleRepository.getBrands(filters);
-        res.json({ brands: brands});
+        const { top_level_category_id } = req.query;
+        const types = await RealEstateRepository.getTypes(
+            top_level_category_id ? parseInt(top_level_category_id as string) : undefined
+        );
+        res.json({ types });
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while fetching vehicle brands.'});
+        res.status(500).json({ error: 'An error occurred while fetching property types.' });
     }
 });
 
-real_estate.get('/models', validateQuery(vehicleQuerySchema), async (req, res) => {
+realEstateRouter.get('/cities', async (req, res) => {
     try {
-        const filters = req.query;
-        const models = await VehicleRepository.getModels(filters);
-        res.json({ models: models});
+        const { province_id } = req.query;
+        const cities = await RealEstateRepository.getCities(
+            province_id ? parseInt(province_id as string) : undefined
+        );
+        res.json({ cities });
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while fetching possible models.' });
+        res.status(500).json({ error: 'An error occurred while fetching cities.' });
     }
 });
 
-real_estate.post('/', authService.isAuthenticated, async (req, res) => {
+realEstateRouter.get('/provinces', async (req, res) => {
+    try {
+        const provinces = await RealEstateRepository.getProvinces();
+        res.json({ provinces });
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while fetching provinces.' });
+    }
+});
+
+realEstateRouter.post('/', authService.isAuthenticated, async (req, res) => {
     const userID = sessionService.getSessionUserID(req);
     if (!userID) {
-        res.status(500).json({ error: 'Authentication Failed' });
+        res.status(401).json({ error: 'Authentication Failed' });
         return;
     }
 
     try {
-        await VehicleRepository.createVehicle(req.body, userID);
-        res.status(200).json({ message: 'Vehicle listing created successfully' });
-    } catch(error) {
-        res.status(500).json({ error: 'An error occurred while creating the vehicle listing: ' + error  });
-        return;
+        await RealEstateRepository.createRealEstateObject(req.body, userID);
+        res.status(201).json({ message: 'Real estate listing created successfully' });
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(500).json({ error: `An error occurred while creating the real estate listing: ${error.message}` });
+        } else {
+            res.status(500).json({ error: 'An error occurred while creating the real estate listing' });
+        }
     }
 });
 
-real_estate.put('/', authService.isAuthenticated, async (req, res) => {
+realEstateRouter.put('/', authService.isAuthenticated, async (req, res) => {
     const userID = sessionService.getSessionUserID(req);
     if (!userID) {
-        res.status(500).json({ error: 'Authentication Failed' });
+        res.status(401).json({ error: 'Authentication Failed' });
         return;
     }
 
     const { listing_id } = req.body;
+    const parsed_listing_id = parseInt(listing_id);
 
-    const parsed_listing_id = parseInt(listing_id, 10);
-    if (isNaN(listing_id)) {
-        res.status(400).json({ message: 'Invalid ID!' });
+    if (isNaN(parsed_listing_id)) {
+        res.status(400).json({ error: 'Invalid listing ID' });
         return;
     }
 
     try {
+        // Verify ownership
         const listing_user_uuid = await listingRepository.getUserIDByListingID(parsed_listing_id);
         if (listing_user_uuid !== userID) {
             res.status(403).json({ error: 'You are not authorized to modify this listing' });
             return;
         }
 
-        await VehicleRepository.updateVehicle(req.body, listing_id, userID);
-        res.status(200).json({ message: 'Vehicle listing updated successfully' });
+        await RealEstateRepository.updateRealEstateObject(req.body, parsed_listing_id, userID);
+        res.status(200).json({ message: 'Real estate listing updated successfully' });
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while updating the vehicle listing: ' + error });
-        return;
+        if (error instanceof Error) {
+            res.status(500).json({ error: `An error occurred while updating the real estate listing: ${error.message}` });
+        } else {
+            res.status(500).json({ error: 'An error occurred while updating the real estate listing' });
+        }
     }
 });
 
-export default real_estate;
+realEstateRouter.get('/:id', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+            res.status(400).json({ error: 'Invalid ID format' });
+            return;
+        }
+
+        const listing = await RealEstateRepository.getRealEstateObjects({ id });
+        if (!listing || listing.length === 0) {
+            res.status(404).json({ error: 'Listing not found' });
+            return;
+        }
+
+        res.json({ listing: listing[0] });
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while fetching the real estate listing.' });
+    }
+});
+
+export default realEstateRouter;

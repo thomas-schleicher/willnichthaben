@@ -2,11 +2,11 @@ drop table if exists real_estate_object_properties cascade;
 drop table if exists additional_properties cascade;
 drop table if exists real_estate_objects cascade;
 drop table if exists cities cascade;
-drop table if exists provinces cascade;
+drop table if exists real_estate_provinces cascade;
 drop table if exists real_estate_types cascade;
-drop table if exists top_level_categories cascade;
+drop table if exists real_estate_top_level_categories cascade;
 
-create table top_level_categories
+create table real_estate_top_level_categories
 (
     id   serial primary key,
     name varchar(50) not null unique
@@ -16,12 +16,12 @@ create table real_estate_types
 (
     id                    serial primary key,
     name                  varchar(50) not null unique,
-    top_level_category_id int         not null references top_level_categories (id)
+    top_level_category_id int         not null references real_estate_top_level_categories (id)
 );
 
 -- provinces
 -- for simplicity plz of given state will be its capital
-create table provinces
+create table real_estate_provinces
 (
     id        serial primary key,
     name      varchar(50) not null unique,
@@ -33,7 +33,7 @@ create table cities
 (
     id          serial primary key,
     name        varchar(50) not null,
-    province_id int         not null references provinces (id),
+    province_id int         not null references real_estate_provinces (id),
     plz         smallint    not null,
     unique (name, province_id)
 );
@@ -43,7 +43,7 @@ create table additional_properties
 (
     id                    serial primary key,
     name                  varchar(50) not null,
-    top_level_category_id int references top_level_categories (id),
+    top_level_category_id int references real_estate_top_level_categories (id),
     property_type         varchar(50) default 'boolean'
 );
 
@@ -59,7 +59,7 @@ create table real_estate_object_properties
 create table real_estate_objects
 (
     id                     serial primary key,
-    listing_id             INT NOT NULL REFERENCES listings(id) ON DELETE CASCADE,
+    listing_id             INT          NOT NULL REFERENCES listings (id) ON DELETE CASCADE,
     name                   varchar(100) not null,
     type_id                int          not null references real_estate_types (id),
     description            text,
@@ -70,13 +70,17 @@ create table real_estate_objects
     advance_payment        numeric,
     immediate_availability boolean,
     owner_id               int          not null,
-    status                 varchar(20) default 'open'
+    status                 varchar(20) default 'open',
+    living_area            numeric,
+    room_count             integer,
+    availability           date,
+    term_type              varchar(50),
+    kitchen                boolean,
+    cellar                 boolean
 );
 
--- pre-fill data
-
 -- top-level categories
-insert into top_level_categories (name)
+insert into real_estate_top_level_categories (name)
 values ('houses'),
        ('rooms/apartments');
 
@@ -88,7 +92,7 @@ values ('room', 2),
        ('villa', 1),
        ('detached house', 1);
 
-insert into provinces (name, plz_range)
+insert into real_estate_provinces (name, plz_range)
 values ('Wien', '[1000,2000)'),
        ('Niederösterreich', '[2000,4000)'),
        ('Oberösterreich', '[4000,5000)'),
@@ -210,5 +214,9 @@ VALUES ('Wien, 01. Bezirk, Innere Stadt', 1, 1010),
 -- additional properties
 insert into additional_properties (name, top_level_category_id, property_type)
 values ('balcony', 2, 'boolean'),
+       ('balcony_size', 2, 'numeric'),
        ('garden', 2, 'boolean'),
-       ('land plot size', 1, 'numeric');
+       ('parking', 2, 'boolean'),
+       ('storage_room', 2, 'boolean'),
+       ('land plot size', 1, 'numeric'),
+       ('num_floors', 1, 'numeric');
