@@ -2,12 +2,12 @@
 INSERT INTO addresses (postal_code, city, street_address)
 SELECT postal_code, city, street_address
 FROM (VALUES
-    ('00100', 'Helsinki', 'Mannerheimintie 123'),
-    ('00200', 'Helsinki', 'Fredrikinkatu 45'),
-    ('00500', 'Helsinki', 'Sturenkatu 78'),
-    ('00180', 'Helsinki', 'Ruoholahdenkatu 14'),
-    ('00220', 'Helsinki', 'Töölönkatu 56')
-) AS a(postal_code, city, street_address)
+          ('1010', 'Vienna', 'Schönbrunnstraße 12'),
+          ('1100', 'Vienna', 'Innere Stadt 34'),
+          ('1050', 'Vienna', 'Gumpendorfer Straße 78'),
+          ('1030', 'Vienna', 'Hietzinger Hauptstraße 45'),
+          ('1110', 'Vienna', 'Oberlaa 23')
+     ) AS a(postal_code, city, street_address)
 RETURNING id;
 
 -- Then, insert users with UUID generation and link to addresses
