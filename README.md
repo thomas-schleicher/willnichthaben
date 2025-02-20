@@ -18,7 +18,7 @@ A clone of Willhaben designed to provide marketplaces for retail, vehicles, and 
 ### **Retail Marketplace** - **(Elias Wassertheurer)**
 
 #### Seller View:
-- [ ] Add, update, and delete product listings.
+- [x] Add, update, and delete product listings.
     - Product Properties: Name, category, description, price, delivery options, condition, pictures, and additional category-specific properties.
 
 #### Buyer View:
@@ -36,7 +36,7 @@ A clone of Willhaben designed to provide marketplaces for retail, vehicles, and 
 
 ### **Vehicle Marketplace** - **(Thomas Schleicher)**
 #### Seller View:
-- [ ] Add, update, and delete vehicle listings.
+- [x] Add, update, and delete vehicle listings.
     - **Vehicle Properties**: Name, model, type, description, price, registration date, mileage, fuel type, color, condition, pictures.
 
 #### Buyer View:
@@ -54,7 +54,7 @@ A clone of Willhaben designed to provide marketplaces for retail, vehicles, and 
 
 ### **Real Estate Rental Marketplace** - **(Raphael Walcher)**
 #### Owner View:
-- [ ] Add, update, and delete real estate listings.
+- [x] Add, update, and delete real estate listings.
     - **Real Estate Properties**: Name, type, description, address (city), price, rental period, deposit, availability, pictures, additional category-specific properties.
 
 #### Buyer View:
