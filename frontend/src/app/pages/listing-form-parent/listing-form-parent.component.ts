@@ -64,7 +64,7 @@ export class ListingFormParentComponent implements OnInit {
       // Automatically select the form based on the listing type.
       // Adjust the condition values based on your actual listing type values.
       if (listing.type === 'retail') {
-        this.selectedForm = 'retailForm';
+        this.selectedForm = 'retailItemForm';
       } else if (listing.type === 'real-estate') {
         this.selectedForm = 'realEstateForm';
       } else if (listing.type === 'vehicle') {

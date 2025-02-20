@@ -1,1 +1,15 @@
-<p>retail works!</p>
+<div id="container">
+    <div id="filter">
+        <app-retail-item-filter></app-retail-item-filter>
+    </div>
+    <app-listing-preview 
+        *ngFor="let retail_item of retail_items" 
+        [type]="retail_item.type"
+        [name]="retail_item.name" 
+        [id]="retail_item.listing_id" 
+        [price]="retail_item.price"
+        [title]="retail_item.title" 
+        [delivery_options]="retail_item.delivery_options"
+        [condition]="retail_item.condition">
+    </app-listing-preview>
+</div>

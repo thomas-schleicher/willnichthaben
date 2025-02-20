@@ -3,12 +3,14 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ListingService } from '../../service/listing.service';
 import { VehicleSubheaderComponent } from '../vehicle/vehicle-subheader/vehicle-subheader.component';
 import { VehicleDescriptionComponent } from '../vehicle/vehicle-description/vehicle-description.component';
+import { RetailItemSubheaderComponent } from '../retail_item/retail_item-subheader/retail_item-subheader.component';
+import { RetailItemDescriptionComponent } from '../retail_item/retail_item-description/retail_item-description.component';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { ImageReelComponent } from '../image-reel/image-reel.component';
 
 @Component({
   selector: 'app-listing',
-  imports: [SidebarComponent, ImageReelComponent, VehicleSubheaderComponent, VehicleDescriptionComponent, NgIf, CommonModule],
+  imports: [SidebarComponent, ImageReelComponent, VehicleSubheaderComponent, RetailItemSubheaderComponent, VehicleDescriptionComponent, RetailItemDescriptionComponent, NgIf, CommonModule],
   templateUrl: './listing.component.html',
   styleUrl: './listing.component.scss'
 })
@@ -37,6 +39,11 @@ export class ListingComponent {
   vehicle_model_name: string = '';
   vehicle_mark_name: string = '';
   vehicle_type: string = '';
+
+  // retail properties
+  retail_item_name: string = '';
+  retail_item_delivery_options: string = '';
+  retail_item_condition: string = '';
   
   constructor (private listingService: ListingService) {}
 
@@ -58,6 +65,10 @@ export class ListingComponent {
       this.vehicle_model_name = listing.vehicle_model_name;
       this.vehicle_mark_name = listing.vehicle_mark_name;
       this.vehicle_type = listing.vehicle_type;
+
+      this.retail_item_name = listing.retail_name;
+      this.retail_item_delivery_options = listing.retail_delivery_options;
+      this.retail_item_condition = listing.retail_condition;
     });
   }  
 }

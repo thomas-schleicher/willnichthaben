@@ -59,7 +59,7 @@ class ListingRepository {
         LEFT JOIN
             vehicle_types vtype ON l.type = 'vehicle' AND v.type_id = vtype.id
         LEFT JOIN 
-            retail_items ri ON l.type = 'retail' AND l.id = ri.id
+            retail_items ri ON l.type = 'retail' AND l.id = ri.listing_id
         LEFT JOIN
             retail_categories rc ON l.type = 'retail' AND ri.category_id = rc.id
         LEFT JOIN

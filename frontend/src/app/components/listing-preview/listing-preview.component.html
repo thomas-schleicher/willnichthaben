@@ -4,6 +4,7 @@
         <div>
             <p>{{title}}</p>
             <app-vehicle-subheader *ngIf="type === 'vehicle'" [condition]="condition" [date_first_registration]="date_first_registration" [mileage]="mileage"></app-vehicle-subheader>
+            <app-retail-item-subheader *ngIf="type === 'retail'" [name]="name" [condition]="condition" [delivery_options]="delivery_options"></app-retail-item-subheader>
         </div>
         <p id="price">€ {{price}}</p>
     </div>
