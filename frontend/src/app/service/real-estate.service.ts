@@ -58,4 +58,13 @@ export class RealEstateService {
         })
     );
   }
+
+  createListing(data: any): Observable<any> {
+    return this.http.post('/real_estate/', data);
+  }
+
+  updateListing(data: any): Observable<any> {
+    return this.http.put('/real_estate/', data);
+  }
+
 }

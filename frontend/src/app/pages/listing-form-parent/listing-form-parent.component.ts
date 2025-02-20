@@ -58,11 +58,6 @@ export class ListingFormParentComponent implements OnInit {
   prefillData(): void {
     this.listingService.getListingAuthenticated(<number>this.listingId).subscribe(listing => {
       this.listingData = listing;
-      // Optionally, set component-level fields here if needed:
-      // e.g. this.title = listing.title; etc.
-
-      // Automatically select the form based on the listing type.
-      // Adjust the condition values based on your actual listing type values.
       if (listing.type === 'retail') {
         this.selectedForm = 'retailItemForm';
       } else if (listing.type === 'real-estate') {
