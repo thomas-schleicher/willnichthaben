@@ -57,4 +57,29 @@ export class RetailService {
             condition: condition
         })
     }
+
+    /**
+     * Creates a retail item listing
+     * @param type 
+     * @param title 
+     * @param description 
+     * @param price 
+     * @param name 
+     * @param category_id 
+     * @param delivery_options 
+     * @param condition 
+     * @returns 
+     */
+    createRetailListing(type: string, title: string, description: string, price: number, name: string, category_id: number, delivery_options: string, condition: string): Observable<any> {
+        return this.http.post("/retail", {
+            type: type,
+            title: title,
+            description: description,
+            price: price,
+            name: name,
+            category_id: category_id,
+            delivery_options: delivery_options,
+            condition: condition
+        })
+    }
 }
