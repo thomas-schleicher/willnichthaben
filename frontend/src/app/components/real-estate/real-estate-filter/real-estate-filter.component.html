@@ -1,0 +1,208 @@
+<form [formGroup]="filterForm" (ngSubmit)="applyFilters()" class="p-4 bg-white rounded-lg shadow-sm">
+  <!-- Property Type Selection -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold mb-4">Property Type</h3>
+    <div class="flex gap-4">
+      <button type="button"
+              [class.bg-blue-500]="filterForm.get('topLevelCategory')?.value === 'houses'"
+              [class.text-white]="filterForm.get('topLevelCategory')?.value === 'houses'"
+              [class.bg-gray-100]="filterForm.get('topLevelCategory')?.value !== 'houses'"
+              class="px-4 py-2 rounded-lg flex-1 transition-colors"
+              (click)="filterForm.get('topLevelCategory')?.setValue('houses')">
+        Houses
+      </button>
+      <button type="button"
+              [class.bg-blue-500]="filterForm.get('topLevelCategory')?.value === 'rooms/apartments'"
+              [class.text-white]="filterForm.get('topLevelCategory')?.value === 'rooms/apartments'"
+              [class.bg-gray-100]="filterForm.get('topLevelCategory')?.value !== 'rooms/apartments'"
+              class="px-4 py-2 rounded-lg flex-1 transition-colors"
+              (click)="filterForm.get('topLevelCategory')?.setValue('rooms/apartments')">
+        Rooms/Apartments
+      </button>
+    </div>
+  </div>
+
+  <!-- Location Section -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold mb-4">Location</h3>
+    <div class="grid gap-4">
+      <div class="form-group">
+        <label class="block text-sm font-medium mb-2" for="province">Province</label>
+        <select id="province" formControlName="province_id"
+                class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          <option [ngValue]="null">Select Province</option>
+          <option *ngFor="let province of provinces" [value]="province.id">
+            {{province.name}}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group" *ngIf="filteredCities.length">
+        <label class="block text-sm font-medium mb-2" for="cities">Cities</label>
+        <select id="cities" formControlName="city_ids" multiple
+                class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[120px] bg-white shadow-sm hover:border-blue-400 transition-colors">
+          <option *ngFor="let city of filteredCities" [value]="city.id">
+            {{city.name}}
+          </option>
+        </select>
+        <p class="text-sm text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple cities</p>
+      </div>
+
+      <div class="form-group">
+        <label class="block text-sm font-medium mb-2" for="postal_code">Postal Code</label>
+        <input type="text" id="postal_code" formControlName="postal_code"
+               class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      </div>
+    </div>
+  </div>
+
+  <!-- Price Section -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold mb-4">Price & Period</h3>
+    <div class="grid gap-4 md:grid-cols-2">
+      <div class="form-group">
+        <label class="block text-sm font-medium mb-2" for="price_min">Min Price</label>
+        <input type="number" id="price_min" formControlName="price_min"
+               class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      </div>
+      <div class="form-group">
+        <label class="block text-sm font-medium mb-2" for="price_max">Max Price</label>
+        <input type="number" id="price_max" formControlName="price_max"
+               class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      </div>
+    </div>
+    <div class="mt-4">
+      <label class="block text-sm font-medium mb-2" for="renting_period">Renting Period</label>
+      <input type="text" id="renting_period" formControlName="renting_period"
+             class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+    </div>
+  </div>
+
+  <!-- Size Section -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold mb-4">Size & Rooms</h3>
+    <div class="grid gap-4 md:grid-cols-2">
+      <div class="form-group">
+        <label class="block text-sm font-medium mb-2" for="living_area_min">Min Living Area</label>
+        <input type="number" id="living_area_min" formControlName="living_area_min"
+               class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      </div>
+      <div class="form-group">
+        <label class="block text-sm font-medium mb-2" for="living_area_max">Max Living Area</label>
+        <input type="number" id="living_area_max" formControlName="living_area_max"
+               class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      </div>
+      <div class="form-group">
+        <label class="block text-sm font-medium mb-2" for="room_count_min">Min Rooms</label>
+        <input type="number" id="room_count_min" formControlName="room_count_min"
+               class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      </div>
+      <div class="form-group">
+        <label class="block text-sm font-medium mb-2" for="room_count_max">Max Rooms</label>
+        <input type="number" id="room_count_max" formControlName="room_count_max"
+               class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      </div>
+    </div>
+  </div>
+
+  <!-- House-specific fields -->
+  <ng-container *ngIf="filterForm.get('topLevelCategory')?.value === 'houses'">
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold mb-4">House Specific Details</h3>
+      <div class="grid gap-4 md:grid-cols-2">
+        <div class="form-group">
+          <label class="block text-sm font-medium mb-2" for="land_plot_size_min">Min Land Plot Size</label>
+          <input type="number" id="land_plot_size_min" formControlName="land_plot_size_min"
+                 class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div class="form-group">
+          <label class="block text-sm font-medium mb-2" for="land_plot_size_max">Max Land Plot Size</label>
+          <input type="number" id="land_plot_size_max" formControlName="land_plot_size_max"
+                 class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+      </div>
+      <div class="mt-4">
+        <label class="block text-sm font-medium mb-2" for="num_floors">Number of Floors</label>
+        <input type="number" id="num_floors" formControlName="num_floors"
+               class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Apartment-specific fields -->
+  <ng-container *ngIf="filterForm.get('topLevelCategory')?.value === 'rooms/apartments'">
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold mb-4">Apartment Specific Details</h3>
+      <div class="form-group mb-4">
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="balcony" formControlName="balcony"
+                 class="rounded border-gray-300 text-blue-500 focus:ring-blue-500">
+          <span class="ml-2">Balcony</span>
+        </label>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2" *ngIf="filterForm.get('balcony')?.value">
+        <div class="form-group">
+          <label class="block text-sm font-medium mb-2" for="balcony_size_min">Min Balcony Size</label>
+          <input type="number" id="balcony_size_min" formControlName="balcony_size_min"
+                 class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div class="form-group">
+          <label class="block text-sm font-medium mb-2" for="balcony_size_max">Max Balcony Size</label>
+          <input type="number" id="balcony_size_max" formControlName="balcony_size_max"
+                 class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Amenities -->
+  <div class="mb-6">
+    <h3 class="text-lg font-semibold mb-4">Amenities</h3>
+    <div class="grid gap-3 md:grid-cols-2">
+      <label class="inline-flex items-center">
+        <input type="checkbox" formControlName="garden"
+               class="rounded border-gray-300 text-blue-500 focus:ring-blue-500">
+        <span class="ml-2">Garden</span>
+      </label>
+      <label class="inline-flex items-center">
+        <input type="checkbox" formControlName="parking"
+               class="rounded border-gray-300 text-blue-500 focus:ring-blue-500">
+        <span class="ml-2">Parking</span>
+      </label>
+      <label class="inline-flex items-center">
+        <input type="checkbox" formControlName="storage_room"
+               class="rounded border-gray-300 text-blue-500 focus:ring-blue-500">
+        <span class="ml-2">Storage Room</span>
+      </label>
+      <label class="inline-flex items-center">
+        <input type="checkbox" formControlName="kitchen"
+               class="rounded border-gray-300 text-blue-500 focus:ring-blue-500">
+        <span class="ml-2">Kitchen</span>
+      </label>
+      <label class="inline-flex items-center">
+        <input type="checkbox" formControlName="cellar"
+               class="rounded border-gray-300 text-blue-500 focus:ring-blue-500">
+        <span class="ml-2">Cellar</span>
+      </label>
+      <label class="inline-flex items-center">
+        <input type="checkbox" formControlName="immediate_availability"
+               class="rounded border-gray-300 text-blue-500 focus:ring-blue-500">
+        <span class="ml-2">Immediate Availability</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex gap-4 justify-end">
+    <button type="button"
+            class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+            (click)="resetFilters()">
+      Reset
+    </button>
+    <button type="submit"
+            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+      Apply Filters
+    </button>
+  </div>
+</form>
