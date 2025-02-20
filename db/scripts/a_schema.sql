@@ -14,7 +14,7 @@ CREATE TABLE users (
 
 CREATE TABLE listings (
     id          SERIAL PRIMARY KEY,
-    seller_id   UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    seller_id   UUID NOT NULL,
     type        VARCHAR(10) NOT NULL CHECK (type IN ('retail', 'property', 'vehicle')),
     title       VARCHAR(255),
     description TEXT,

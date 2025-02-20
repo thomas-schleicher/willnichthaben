@@ -1,3 +1,4 @@
+-- Drop the tables if they exist
 drop table if exists real_estate_object_properties cascade;
 drop table if exists additional_properties cascade;
 drop table if exists real_estate_objects cascade;
@@ -6,12 +7,14 @@ drop table if exists real_estate_provinces cascade;
 drop table if exists real_estate_types cascade;
 drop table if exists real_estate_top_level_categories cascade;
 
+-- Create top-level categories table
 create table real_estate_top_level_categories
 (
     id   serial primary key,
     name varchar(50) not null unique
 );
 
+-- Create real estate types table
 create table real_estate_types
 (
     id                    serial primary key,
@@ -19,8 +22,7 @@ create table real_estate_types
     top_level_category_id int         not null references real_estate_top_level_categories (id)
 );
 
--- provinces
--- for simplicity plz of given state will be its capital
+-- Create provinces table (PLZ of the given state will be its capital)
 create table real_estate_provinces
 (
     id        serial primary key,
@@ -28,7 +30,7 @@ create table real_estate_provinces
     plz_range int4range   not null
 );
 
--- cities
+-- Create cities table
 create table cities
 (
     id          serial primary key,
@@ -38,28 +40,11 @@ create table cities
     unique (name, province_id)
 );
 
--- additional properties
-create table additional_properties
-(
-    id                    serial primary key,
-    name                  varchar(50) not null,
-    top_level_category_id int references real_estate_top_level_categories (id),
-    property_type         varchar(50) default 'boolean'
-);
-
-create table real_estate_object_properties
-(
-    id                     serial primary key,
-    real_estate_object_id  int  not null,
-    additional_property_id int  not null references additional_properties (id),
-    value                  text not null
-);
-
--- real estate objects
+-- Create the main real_estate_objects table with merged additional properties
 create table real_estate_objects
 (
     id                     serial primary key,
-    listing_id             INT          NOT NULL REFERENCES listings (id) ON DELETE CASCADE,
+    listing_id             int          not null references listings (id) on delete cascade,
     name                   varchar(100) not null,
     type_id                int          not null references real_estate_types (id),
     description            text,
@@ -76,8 +61,17 @@ create table real_estate_objects
     availability           date,
     term_type              varchar(50),
     kitchen                boolean,
-    cellar                 boolean
+    cellar                 boolean,
+    -- Merged Additional Properties
+    balcony                boolean,
+    balcony_size           numeric,
+    garden                 boolean,
+    parking                boolean,
+    storage_room           boolean,
+    land_plot_size         numeric,
+    num_floors             numeric
 );
+
 
 -- top-level categories
 insert into real_estate_top_level_categories (name)
@@ -211,12 +205,3 @@ VALUES ('Wien, 01. Bezirk, Innere Stadt', 1, 1010),
        ('Wolfsberg', 9, 9400);
 
 
--- additional properties
-insert into additional_properties (name, top_level_category_id, property_type)
-values ('balcony', 2, 'boolean'),
-       ('balcony_size', 2, 'numeric'),
-       ('garden', 2, 'boolean'),
-       ('parking', 2, 'boolean'),
-       ('storage_room', 2, 'boolean'),
-       ('land plot size', 1, 'numeric'),
-       ('num_floors', 1, 'numeric');
