@@ -78,6 +78,8 @@ export class RetailFormComponent {
 
       if (this.modifyMode) {
         this.retailService.updateRetailItemListing(this.data.id, this.data.type, title, description, price, name, category_id, delivery_options, condition).subscribe();
+      } else {
+        this.retailService.createRetailListing('retail', title, description, price, name, category_id, delivery_options, condition).subscribe();
       }
     }
   }

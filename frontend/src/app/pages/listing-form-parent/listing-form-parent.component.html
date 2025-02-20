@@ -1,19 +1,19 @@
 <div class="button-container">
   <button
-    [class.active]="selectedForm === 'retailForm'"
-    [hidden]="isModifyMode"
-    (click)="onSelectForm('retailForm')">
+    [class.active]="selectedForm === 'retailItemForm'"
+    [disabled]="isModifyMode"
+    (click)="onSelectForm('retailItemForm')">
     Retail Item
   </button>
   <button
     [class.active]="selectedForm === 'realEstateForm'"
-    [hidden]="isModifyMode"
+    [disabled]="isModifyMode"
     (click)="onSelectForm('realEstateForm')">
     Real Estate
   </button>
   <button
     [class.active]="selectedForm === 'vehicleForm'"
-    [hidden]="isModifyMode"
+    [disabled]="isModifyMode"
     (click)="onSelectForm('vehicleForm')">
     Vehicle
   </button>
