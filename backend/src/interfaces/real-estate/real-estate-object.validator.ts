@@ -30,7 +30,13 @@ export const realEstateListingSchema = Joi.object({
     parking: Joi.boolean().optional(),
     storage_room: Joi.boolean().optional(),
     land_plot_size: Joi.number().positive().optional(),
-    num_floors: Joi.number().positive().optional()
+    num_floors: Joi.number().positive().optional(),
+    living_area: Joi.number().positive().optional(),
+    room_count: Joi.number().integer().positive().optional(),
+    availability: Joi.date().optional(),
+    term_type: Joi.string().max(50).optional(),
+    kitchen: Joi.boolean().optional(),
+    cellar: Joi.boolean().optional()
 });
 
 // Helper: Accepts either a single value or an array of values.

@@ -1,25 +1,21 @@
+// real-estate-form.component.ts
 import { Component, Input, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatExpansionModule } from '@angular/material/expansion';
-import {JsonPipe, NgFor, NgIf} from '@angular/common';
+import {NgFor, NgIf} from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { RealEstateService } from '../../../../service/real-estate.service';
 
 @Component({
   selector: 'app-real-estate-form',
+  templateUrl: './real-estate-form.component.html',
+  styleUrls: ['./real-estate-form.component.scss'],
   imports: [
     NgFor,
-    NgIf,
     ReactiveFormsModule,
     MatButtonToggleModule,
     MatCheckboxModule,
@@ -28,10 +24,8 @@ import { RealEstateService } from '../../../../service/real-estate.service';
     MatSelectModule,
     MatInputModule,
     MatDatepickerModule,
-    JsonPipe
+    NgIf
   ],
-  templateUrl: './real-estate-form.component.html',
-  styleUrl: './real-estate-form.component.scss',
   standalone: true
 })
 export class RealEstateFormComponent implements OnInit {
@@ -40,108 +34,79 @@ export class RealEstateFormComponent implements OnInit {
 
   realEstateForm: FormGroup;
 
-  constructor(
-    private fb: FormBuilder,
-    private realEstateService: RealEstateService
-  ) {
-    this.realEstateForm = this.fb.group({
-      topLevelCategory: ['houses'],
-      type_ids: [[]],
-      listing_id: [''],
-      province_id: [''],
-      city_ids: [[]],
-      price: [''],
-      renting_period: [''],
-      immediate_availability: [false],
-      living_area: [''],
-      room_count: [''],
-      amenities: this.fb.group({
-        balcony: [false],
-        balcony_size: [''],
-        garden: [false],
-        parking: [false],
-        storage_room: [false],
-        kitchen: [false],
-        cellar: [false]
-      }),
-      land_plot_size_min: [''],
-      land_plot_size_max: [''],
-      num_floors: [''],
-      postal_code: ['']
-    });
+  propertyTypes = [
+    { id: 1, name: 'Apartment' },
+    { id: 2, name: 'House' },
+    { id: 3, name: 'Room' },
+    { id: 4, name: 'Studio' },
+    { id: 5, name: 'Villa' },
+    { id: 6, name: 'Penthouse' }
+  ];
 
-    // Add conditional validation for balcony size
-    this.realEstateForm.get('amenities.balcony')?.valueChanges.subscribe(hasBalcony => {
-      const balconySizeMinControl = this.realEstateForm.get('amenities.balcony_size_min');
-      const balconySizeMaxControl = this.realEstateForm.get('amenities.balcony_size_max');
-      if (hasBalcony) {
-        balconySizeMinControl?.setValidators(Validators.min(0));
-        balconySizeMaxControl?.setValidators(Validators.min(0));
-      } else {
-        balconySizeMinControl?.clearValidators();
-        balconySizeMaxControl?.clearValidators();
-        balconySizeMinControl?.setValue('');
-        balconySizeMaxControl?.setValue('');
-      }
-      balconySizeMinControl?.updateValueAndValidity();
-      balconySizeMaxControl?.updateValueAndValidity();
-    });
+  constructor(private fb: FormBuilder) {
+    this.realEstateForm = this.fb.group({});
   }
 
   ngOnInit(): void {
-    if (this.modifyMode && this.data) {
-      const formData = {
-        ...this.data,
-        amenities: {
-          balcony: this.data.balcony || false,
-          balcony_size_min: this.data.balcony_size_min || '',
-          balcony_size_max: this.data.balcony_size_max || '',
-          garden: this.data.garden || false,
-          parking: this.data.parking || false,
-          storage_room: this.data.storage_room || false,
-          kitchen: this.data.kitchen || false,
-          cellar: this.data.cellar || false
-        }
-      };
+    this.realEstateForm = this.fb.group({
+      topLevelCategory: ['houses'],
+      type_id: [''],
+      name: [''],
+      description: [''],
+      price_per_month: [''],
+      living_area: [''],
+      room_count: [''],
+      availability: [''],
+      immediate_availability: [false],
+      kitchen: [false],
+      cellar: [false],
+      balcony: [false],
+      balcony_size: [''],
+      garden: [false],
+      parking: [false],
+      storage_room: [false],
+      land_plot_size: [''],
+      num_floors: [''],
+      province: [''],
+      city: [''],
+      postal_code: [''],
+      street_address: [''],
+      title: ['']
+    });
 
-      this.realEstateForm.patchValue(formData);
+    if (this.modifyMode && this.data) {
+      this.realEstateForm.patchValue({
+        topLevelCategory: this.data.topLevelCategory,
+        type_id: this.data.type_id,
+        name: this.data.name,
+        description: this.data.description,
+        price_per_month: this.data.price_per_month,
+        living_area: this.data.living_area,
+        room_count: this.data.room_count,
+        availability: this.data.availability,
+        immediate_availability: this.data.immediate_availability,
+        kitchen: this.data.kitchen,
+        cellar: this.data.cellar,
+        balcony: this.data.balcony,
+        balcony_size: this.data.balcony_size,
+        garden: this.data.garden,
+        parking: this.data.parking,
+        storage_room: this.data.storage_room,
+        land_plot_size: this.data.land_plot_size,
+        num_floors: this.data.num_floors,
+        province: this.data.address?.province,
+        city: this.data.address?.city,
+        postal_code: this.data.address?.postalCode,
+        street_address: this.data.address?.streetAddress,
+        title: this.data.title
+      });
     }
   }
 
   onSubmit(): void {
     if (this.realEstateForm.valid) {
-      const formData = {
-        ...this.realEstateForm.value,
-        ...this.realEstateForm.value.amenities
-      };
-      delete formData.amenities;
-
-      // Remove empty fields to match schema expectations
-      Object.keys(formData).forEach(key => {
-        if (formData[key] === '' || formData[key] === null) {
-          delete formData[key];
-        }
-      });
-
-      if (this.modifyMode) {
-        this.realEstateService.updateListing(formData).subscribe({
-          next: (response) => {
-            console.log('Property updated successfully', response);
-          },
-          error: (error) => {
-            console.error('Error updating property', error);
-          }
-        });
-      } else {
-        this.realEstateService.createListing(formData).subscribe({
-          next: (response) => {
-            console.log('Property created successfully', response);
-          },
-          error: (error) => {
-            console.error('Error creating property', error);
-          }
-        });
-      }
+      console.log(this.realEstateForm.value);
+      // Handle form submission
     }
   }
 }

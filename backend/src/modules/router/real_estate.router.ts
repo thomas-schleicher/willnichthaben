@@ -5,12 +5,13 @@ import { realEstateQuerySchema } from '../../interfaces/real-estate/real-estate-
 import authService from '../service/auth.service';
 import sessionService from '../service/session.service';
 import listingRepository from '../db/listing.repository';
+import {RealEstateListing} from "../../interfaces/real-estate/real-estate-object.interface";
 
 const realEstateRouter = Router();
 
 realEstateRouter.get('/', validateQuery(realEstateQuerySchema), async (req, res) => {
     try {
-        const filters = req.query;
+        const filters = req.query as unknown as RealEstateListing;
         const listings = await RealEstateRepository.getRealEstateObjects(filters);
         res.json({ listings });
     } catch (error) {
@@ -53,13 +54,13 @@ realEstateRouter.get('/provinces', async (req, res) => {
 
 realEstateRouter.get('/:id', async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) {
+        const listing_id = parseInt(req.params.id);
+        if (isNaN(listing_id)) {
             res.status(400).json({ error: 'Invalid ID format' });
             return;
         }
 
-        const listing = await RealEstateRepository.getRealEstateObjects({ id });
+        const listing = await RealEstateRepository.getRealEstateObjects({listing_id});
         if (!listing || listing.length === 0) {
             res.status(404).json({ error: 'Listing not found' });
             return;
