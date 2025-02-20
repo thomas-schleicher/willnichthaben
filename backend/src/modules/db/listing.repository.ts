@@ -46,7 +46,6 @@ class ListingRepository {
             reo.listing_id,
             reo.id,
             reo.name,
-            reo.description,
             reo.price_per_month,
             reo.living_area,
             reo.room_count,
