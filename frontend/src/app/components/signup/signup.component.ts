@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../service/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -17,15 +18,22 @@ export class SignupComponent {
     street_address: new FormControl("", [Validators.required])
   });
 
-  constructor (private authService: AuthService) {}
+  constructor (private authService: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.authService.isAuthenticated().subscribe((authenticated) => {
+      if (authenticated.status) {
+        this.router.navigateByUrl('/');
+      }
+    });
+  }
 
   onSubmit() {
     if (this.signupForm.valid) {
       const { email, password, city, postal_code, street_address } = this.signupForm.value;
       this.authService.signup(email!, password!, city!, postal_code!, street_address!).subscribe({
         next: (res) => {
-          const { message } = res;
-          alert(message);
+          window.location.reload();
         },
         error: (err) => {
           alert(err.error.message);
