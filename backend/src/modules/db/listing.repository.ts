@@ -65,7 +65,6 @@ class ListingRepository {
             reo.cellar,
             reo.address,
             c.name   as city_name,
-            c.plz    as postal_code,
             rt.name  as property_type,
             rtc.name as category_name,
             reo.renting_period,
