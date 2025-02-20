@@ -45,7 +45,10 @@
                     [type]="listing.type"
                     [date_first_registration]="listing.vehicle_date_first_registration" 
                     [mileage]="listing.vehicle_mileage"
-                    [condition]="listing.vehicle_condition">
+                    [condition]="listing.vehicle_condition"
+                    [name]="listing.retail_name"
+                    [delivery_options]="listing.retail_delivery_options"
+                    [condition]="listing.retail_condition">
                 </app-listing-preview>
                 <button (click)="modifyListing(listing.id)">Modify</button>
                 <button (click)="deleteListing(listing.id)">Delete</button>

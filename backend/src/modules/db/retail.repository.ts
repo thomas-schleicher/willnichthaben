@@ -31,6 +31,7 @@ class RetailRepository {
             l.type,
             l.title,
             l.price,
+            r.name,
             r.category_id,
             r.delivery_options,
             r.condition

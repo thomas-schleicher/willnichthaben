@@ -1,1 +1,46 @@
-<p>retail-form works!</p>
+<form [formGroup]="retailItemForm" (ngSubmit)="onSubmit()">
+    <div>
+        <mat-button-toggle-group formControlName="category_id">
+            <mat-button-toggle [value]="1">Electronics</mat-button-toggle>
+            <mat-button-toggle [value]="2">Furniture</mat-button-toggle>
+            <mat-button-toggle [value]="3">Fashion</mat-button-toggle>
+            <mat-button-toggle [value]="4">Sports & Outdoors</mat-button-toggle>
+            <mat-button-toggle [value]="5">Books & Media</mat-button-toggle>
+        </mat-button-toggle-group>
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label>Condition</mat-label>
+                <mat-select formControlName="condition">
+                    <mat-option [value]="'new'">New</mat-option>
+                    <mat-option [value]="'used'">Used</mat-option>
+                    <mat-option [value]="'broken'">Broken</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Delivery Option</mat-label>
+                <mat-select formControlName="delivery_options">
+                    <mat-option [value]="'only pick up'">Only Pick up</mat-option>
+                    <mat-option [value]="'only delivery'">Only Delivery</mat-option>
+                    <mat-option [value]="'pick up or delivery'">Pick up or Delivery</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="form-field">
+            <label for="name">Name</label>
+            <input id="name" type="text" formControlName="name" />
+        </div>
+        <div class="form-field">
+            <label for="title">Title</label>
+            <input id="title" type="text" formControlName="title" />
+        </div>
+        <div class="form-field">
+            <label for="description">Description</label>
+            <input id="description" type="text" formControlName="description" />
+        </div>
+        <div class="form-field">
+            <label for="price">Price</label>
+            <input id="price" type="text" formControlName="price" />
+        </div>
+        <button type="submit" [disabled]="retailItemForm.invalid">Submit</button>
+    </div>
+</form>
