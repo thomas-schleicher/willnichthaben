@@ -47,18 +47,17 @@ export class RealEstateComponent implements OnInit {
       .subscribe({
         next: (data) => {
           console.log('Listings loaded:', data);
-          // In this example we assume the API returns an object with a "listings" array.
           const listings = Array.isArray(data) ? data : data.listings;
           this.properties = listings.map((listing: any) => ({
             id: listing.listing_id,
             name: listing.name || 'No name provided',
-            property_type: listing.property_type || 'Unknown',
-            location: listing.city_name && listing.postal_code
-              ? `${listing.city_name} (${listing.postal_code})`
+            property_type: listing.type || 'Unknown',
+            location: listing.address
+              ? `${listing.address.city} (${listing.address.postalCode})`
               : 'Unknown location',
-            price: listing.price_per_month || 0,
+            price: parseFloat(listing.price_per_month) || 0,
             imageURL: 'assets/default-property.jpg',
-            living_area: listing.living_area || 0,
+            living_area: parseFloat(listing.living_area) || 0,
             room_count: listing.room_count || 0,
             availability: listing.availability || 'Unknown'
           }));

@@ -16,6 +16,7 @@ WITH address_ids AS (
 )
 INSERT INTO users (email, password, address_id)
 SELECT
+
     email,
     password,
     address_id

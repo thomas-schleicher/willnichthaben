@@ -1,11 +1,10 @@
--- Insert listings data
 INSERT INTO listings (seller_id, type, title, description, price, is_sold, created_at)
 VALUES
-    ('81b140cd-cd2f-45e1-8216-1ccda393c5af', 'property', 'Luxurious Penthouse in Vienna Center', 'Stunning penthouse with panoramic city views, high-end finishes throughout', 850000.00, false, '2024-02-01'),
-    ('81b140cd-cd2f-45e1-8216-1ccda393c5af', 'property', 'Modern 3-Room Apartment in Leopoldstadt', 'Newly renovated apartment with balcony and parking', 420000.00, false, '2024-02-05'),
-    ('81b140cd-cd2f-45e1-8216-1ccda393c5af', 'property', 'Cozy Studio near University', 'Perfect for students or young professionals', 180000.00, false, '2024-02-10'),
-    ('e7c46b4e-29ba-41c2-9a10-57b3d0041a5c', 'property', 'Villa with Garden in Döbling', 'Elegant villa with large garden and pool', 1250000.00, false, '2024-02-15'),
-    ('e7c46b4e-29ba-41c2-9a10-57b3d0041a5c', 'property', 'Modern Family House in Mödling', 'Contemporary design with smart home features', 750000.00, false, '2024-02-01');
+    ((SELECT id FROM users ORDER BY RANDOM() LIMIT 1), 'property', 'Luxurious Penthouse in Vienna Center', 'Stunning penthouse with panoramic city views, high-end finishes throughout', 850000.00, false, '2024-02-01'),
+    ((SELECT id FROM users ORDER BY RANDOM() LIMIT 1), 'property', 'Modern 3-Room Apartment in Leopoldstadt', 'Newly renovated apartment with balcony and parking', 420000.00, false, '2024-02-05'),
+    ((SELECT id FROM users ORDER BY RANDOM() LIMIT 1), 'property', 'Cozy Studio near University', 'Perfect for students or young professionals', 180000.00, false, '2024-02-10'),
+    ((SELECT id FROM users ORDER BY RANDOM() LIMIT 1), 'property', 'Villa with Garden in Döbling', 'Elegant villa with large garden and pool', 1250000.00, false, '2024-02-15'),
+    ((SELECT id FROM users ORDER BY RANDOM() LIMIT 1), 'property', 'Modern Family House in Mödling', 'Contemporary design with smart home features', 750000.00, false, '2024-02-01');
 
 -- Insert real_estate_objects data with merged property columns
 INSERT INTO real_estate_objects (
