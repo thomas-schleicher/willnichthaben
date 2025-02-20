@@ -14,7 +14,6 @@ class ListingRepository {
   }
 
   async getListingByID(listingID: number): Promise<any | null> {
-    //todo: machts da eure sachen so wie ihr sie brauchts auch rein
     const query = `
         SELECT
             l.id,
@@ -43,7 +42,31 @@ class ListingRepository {
             u.email AS user_email,
             a.postal_code AS postal_code,
             a.city,
-            a.street_address
+            a.street_address,
+            reo.listing_id,
+            reo.id,
+            reo.name,
+            reo.description,
+            reo.price_per_month,
+            reo.living_area,
+            reo.room_count,
+            reo.availability,
+            reo.immediate_availability,
+            reo.kitchen,
+            reo.cellar,
+            reo.address,
+            c.name   as city_name,
+            c.plz    as postal_code,
+            rt.name  as property_type,
+            rtc.name as category_name,
+            reo.renting_period,
+            reo.balcony,
+            reo.balcony_size,
+            reo.garden,
+            reo.parking,
+            reo.storage_room,
+            reo.land_plot_size,
+            reo.num_floors
         FROM
             listings l
         LEFT JOIN
@@ -68,8 +91,12 @@ class ListingRepository {
             retail_item_properties rip ON l.type = 'retail' AND ri.id = rip.retail_item_id AND rcp.id = rip.additional_property_id
         LEFT JOIN 
             real_estate_objects r ON l.type = 'property' AND l.id = r.id
+        left join real_estate_objects reo on reo.listing_id = l.id
+        left JOIN cities c ON c.id = reo.city_id
+        left JOIN real_estate_types rt ON rt.id = reo.type_id
+        left JOIN real_estate_top_level_categories rtc ON rtc.id = rt.top_level_category_id
         WHERE 
-            l.type IN ('vehicle', 'retail', 'realestate') AND l.id = $1;
+            l.type IN ('vehicle', 'retail', 'property') AND l.id = $1;
     `;
     const { rows } = await pool.query(query, [listingID]);
     return rows[0] || null;

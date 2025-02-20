@@ -1,0 +1,14 @@
+div {
+  display: block;
+  column-count: 2;
+}
+
+div p:nth-child(1) {
+  font-weight: 500;
+  color: #8E99AC;
+}
+
+p {
+  margin: 0px;
+  padding: 10px;
+}

@@ -3,55 +3,49 @@ import pool from "../config/postgres.config";
 class RealEstateRepository {
     async getRealEstateObjects(filters: any): Promise<number[]> {
         let query = `
-            SELECT DISTINCT
-                reo.id,
-                reo.name,
-                reo.description,
-                reo.price_per_month,
-                reo.living_area,
-                reo.room_count,
-                reo.availability,
-                reo.immediate_availability,
-                reo.kitchen,
-                reo.cellar,
-                reo.address,
-                c.name as city_name,
-                c.plz as postal_code,
-                rt.name as property_type,
-                rtc.name as category_name
+            SELECT reo.listing_id,
+                   reo.id,
+                   reo.name,
+                   reo.description,
+                   reo.price_per_month,
+                   reo.living_area,
+                   reo.room_count,
+                   reo.availability,
+                   reo.immediate_availability,
+                   reo.kitchen,
+                   reo.cellar,
+                   reo.address,
+                   c.name   as city_name,
+                   c.plz    as postal_code,
+                   rt.name  as property_type,
+                   rtc.name as category_name,
+                   reo.renting_period,
+                   reo.balcony,
+                   reo.balcony_size,
+                   reo.garden,
+                   reo.parking,
+                   reo.storage_room,
+                   reo.land_plot_size,
+                   reo.num_floors
             FROM real_estate_objects reo
                      JOIN cities c ON c.id = reo.city_id
                      JOIN real_estate_types rt ON rt.id = reo.type_id
                      JOIN real_estate_top_level_categories rtc ON rtc.id = rt.top_level_category_id
-                     LEFT JOIN real_estate_object_properties reop ON reop.real_estate_object_id = reo.id
             WHERE reo.status = 'open'
         `;
-
         const queryParams: any[] = [];
         let paramCount = 0;
 
-        if (filters.top_level_category_id) {
+        if (filters.topLevelCategory) {
             paramCount++;
-            query += ` AND rtc.id = $${paramCount}`;
-            queryParams.push(filters.top_level_category_id);
+            query += ` AND rtc.name = $${paramCount}`;
+            queryParams.push(filters.topLevelCategory);
         }
 
         if (filters.type_ids && filters.type_ids.length > 0) {
             paramCount++;
             query += ` AND rt.id = ANY($${paramCount})`;
             queryParams.push(filters.type_ids);
-        }
-
-        if (filters.price_min !== undefined) {
-            paramCount++;
-            query += ` AND reo.price_per_month >= $${paramCount}`;
-            queryParams.push(filters.price_min);
-        }
-
-        if (filters.price_max !== undefined) {
-            paramCount++;
-            query += ` AND reo.price_per_month <= $${paramCount}`;
-            queryParams.push(filters.price_max);
         }
 
         if (filters.province_id) {
@@ -66,12 +60,34 @@ class RealEstateRepository {
             queryParams.push(filters.city_ids);
         }
 
+        if (filters.price_min !== undefined) {
+            paramCount++;
+            query += ` AND reo.price_per_month >= $${paramCount}`;
+            queryParams.push(filters.price_min);
+        }
+        if (filters.price_max !== undefined) {
+            paramCount++;
+            query += ` AND reo.price_per_month <= $${paramCount}`;
+            queryParams.push(filters.price_max);
+        }
+
+        if (filters.renting_period) {
+            paramCount++;
+            query += ` AND reo.renting_period = $${paramCount}`;
+            queryParams.push(filters.renting_period);
+        }
+
+        if (filters.immediate_availability !== undefined) {
+            paramCount++;
+            query += ` AND reo.immediate_availability = $${paramCount}`;
+            queryParams.push(filters.immediate_availability);
+        }
+
         if (filters.living_area_min !== undefined) {
             paramCount++;
             query += ` AND reo.living_area >= $${paramCount}`;
             queryParams.push(filters.living_area_min);
         }
-
         if (filters.living_area_max !== undefined) {
             paramCount++;
             query += ` AND reo.living_area <= $${paramCount}`;
@@ -83,49 +99,87 @@ class RealEstateRepository {
             query += ` AND reo.room_count >= $${paramCount}`;
             queryParams.push(filters.room_count_min);
         }
-
         if (filters.room_count_max !== undefined) {
             paramCount++;
             query += ` AND reo.room_count <= $${paramCount}`;
             queryParams.push(filters.room_count_max);
         }
 
-        if (filters.immediate_availability !== undefined) {
+        if (filters.property_type) {
             paramCount++;
-            query += ` AND reo.immediate_availability = $${paramCount}`;
-            queryParams.push(filters.immediate_availability);
+            query += ` AND rt.name = $${paramCount}`;
+            queryParams.push(filters.property_type);
         }
 
-        if (filters.availability_start) {
+        if (filters.category_name) {
             paramCount++;
-            query += ` AND reo.availability >= $${paramCount}`;
-            queryParams.push(filters.availability_start);
+            query += ` AND rtc.name = $${paramCount}`;
+            queryParams.push(filters.category_name);
         }
 
-        if (filters.has_kitchen !== undefined) {
+        if (filters.kitchen !== undefined) {
             paramCount++;
             query += ` AND reo.kitchen = $${paramCount}`;
-            queryParams.push(filters.has_kitchen);
+            queryParams.push(filters.kitchen);
         }
 
-        if (filters.has_cellar !== undefined) {
+        if (filters.cellar !== undefined) {
             paramCount++;
             query += ` AND reo.cellar = $${paramCount}`;
-            queryParams.push(filters.has_cellar);
+            queryParams.push(filters.cellar);
         }
 
-        // Handle additional properties
-        if (filters.additional_properties && filters.additional_properties.length > 0) {
-            filters.additional_properties.forEach((prop: { id: any; value: any; }, index: any) => {
-                paramCount += 2;
-                query += ` AND EXISTS (
-          SELECT 1 FROM real_estate_object_properties
-          WHERE real_estate_object_id = reo.id
-          AND additional_property_id = $${paramCount - 1}
-          AND value = $${paramCount}
-        )`;
-                queryParams.push(prop.id, prop.value);
-            });
+        if (filters.postal_code) {
+            paramCount++;
+            query += ` AND c.plz = $${paramCount}`;
+            queryParams.push(filters.postal_code);
+        }
+
+        // Filters for merged additional properties.
+        if (filters.balcony !== undefined) {
+            paramCount++;
+            query += ` AND reo.balcony = $${paramCount}`;
+            queryParams.push(filters.balcony);
+        }
+        if (filters.balcony_size_min !== undefined) {
+            paramCount++;
+            query += ` AND reo.balcony_size >= $${paramCount}`;
+            queryParams.push(filters.balcony_size_min);
+        }
+        if (filters.balcony_size_max !== undefined) {
+            paramCount++;
+            query += ` AND reo.balcony_size <= $${paramCount}`;
+            queryParams.push(filters.balcony_size_max);
+        }
+        if (filters.garden !== undefined) {
+            paramCount++;
+            query += ` AND reo.garden = $${paramCount}`;
+            queryParams.push(filters.garden);
+        }
+        if (filters.parking !== undefined) {
+            paramCount++;
+            query += ` AND reo.parking = $${paramCount}`;
+            queryParams.push(filters.parking);
+        }
+        if (filters.storage_room !== undefined) {
+            paramCount++;
+            query += ` AND reo.storage_room = $${paramCount}`;
+            queryParams.push(filters.storage_room);
+        }
+        if (filters.land_plot_size_min !== undefined) {
+            paramCount++;
+            query += ` AND reo.land_plot_size >= $${paramCount}`;
+            queryParams.push(filters.land_plot_size_min);
+        }
+        if (filters.land_plot_size_max !== undefined) {
+            paramCount++;
+            query += ` AND reo.land_plot_size <= $${paramCount}`;
+            queryParams.push(filters.land_plot_size_max);
+        }
+        if (filters.num_floors !== undefined) {
+            paramCount++;
+            query += ` AND reo.num_floors = $${paramCount}`;
+            queryParams.push(filters.num_floors);
         }
 
         query += ` ORDER BY reo.price_per_month ASC`;
@@ -144,16 +198,12 @@ class RealEstateRepository {
             FROM real_estate_types rt
                      JOIN real_estate_top_level_categories rtc ON rtc.id = rt.top_level_category_id
         `;
-
         const queryParams: any[] = [];
-
         if (topLevelCategoryId) {
             query += ` WHERE rt.top_level_category_id = $1`;
             queryParams.push(topLevelCategoryId);
         }
-
         query += ` ORDER BY rtc.name, rt.name`;
-
         const result = await pool.query(query, queryParams);
         return result.rows;
     }
@@ -167,7 +217,6 @@ class RealEstateRepository {
                 VALUES ($1, $2, $3, $4, $5)
                 RETURNING id;
             `;
-
             const listingResult = await pool.query(listingQuery, [
                 userId,
                 'property',
@@ -175,20 +224,20 @@ class RealEstateRepository {
                 data.description,
                 data.price_per_month
             ]);
-
             const listingId = listingResult.rows[0].id;
 
             const realEstateQuery = `
                 INSERT INTO real_estate_objects (
                     listing_id, name, type_id, description, city_id, address,
                     price_per_month, renting_period, advance_payment, immediate_availability,
-                    owner_id, living_area, room_count, availability, term_type, kitchen, cellar
+                    owner_id, living_area, room_count, availability, term_type, kitchen, cellar,
+                    balcony, balcony_size, garden, parking, storage_room, land_plot_size, num_floors
                 )
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17,
+                        $18, $19, $20, $21, $22, $23, $24)
                 RETURNING id;
             `;
-
-            const realEstateResult = await pool.query(realEstateQuery, [
+            await pool.query(realEstateQuery, [
                 listingId,
                 data.name,
                 data.type_id,
@@ -205,27 +254,15 @@ class RealEstateRepository {
                 data.availability,
                 data.term_type,
                 data.kitchen,
-                data.cellar
+                data.cellar,
+                data.balcony,
+                data.balcony_size,
+                data.garden,
+                data.parking,
+                data.storage_room,
+                data.land_plot_size,
+                data.num_floors
             ]);
-
-            // Insert additional properties if any
-            if (data.additional_properties && data.additional_properties.length > 0) {
-                const propertyQuery = `
-                    INSERT INTO real_estate_object_properties (
-                        real_estate_object_id, additional_property_id, value
-                    )
-                    VALUES ($1, $2, $3);
-                `;
-
-                for (const prop of data.additional_properties) {
-                    await pool.query(propertyQuery, [
-                        realEstateResult.rows[0].id,
-                        prop.property_id,
-                        prop.value
-                    ]);
-                }
-            }
-
             await pool.query('COMMIT');
         } catch (error) {
             await pool.query('ROLLBACK');
@@ -243,7 +280,6 @@ class RealEstateRepository {
                 SET title = $1, description = $2, price = $3
                 WHERE id = $4 AND seller_id = $5;
             `;
-
             await pool.query(listingQuery, [
                 data.name,
                 data.description,
@@ -269,10 +305,16 @@ class RealEstateRepository {
                     availability = $12,
                     term_type = $13,
                     kitchen = $14,
-                    cellar = $15
-                WHERE listing_id = $16;
+                    cellar = $15,
+                    balcony = $16,
+                    balcony_size = $17,
+                    garden = $18,
+                    parking = $19,
+                    storage_room = $20,
+                    land_plot_size = $21,
+                    num_floors = $22
+                WHERE listing_id = $23;
             `;
-
             await pool.query(realEstateQuery, [
                 data.name,
                 data.type_id,
@@ -289,33 +331,15 @@ class RealEstateRepository {
                 data.term_type,
                 data.kitchen,
                 data.cellar,
+                data.balcony,
+                data.balcony_size,
+                data.garden,
+                data.parking,
+                data.storage_room,
+                data.land_plot_size,
+                data.num_floors,
                 listingId
             ]);
-
-            // Update additional properties
-            if (data.additional_properties && data.additional_properties.length > 0) {
-                // First, remove existing properties
-                await pool.query(
-                    'DELETE FROM real_estate_object_properties WHERE real_estate_object_id = $1',
-                    [listingId]
-                );
-
-                // Then insert new ones
-                const propertyQuery = `
-                    INSERT INTO real_estate_object_properties (
-                        real_estate_object_id, additional_property_id, value
-                    )
-                    VALUES ($1, $2, $3);
-                `;
-
-                for (const prop of data.additional_properties) {
-                    await pool.query(propertyQuery, [
-                        listingId,
-                        prop.property_id,
-                        prop.value
-                    ]);
-                }
-            }
 
             await pool.query('COMMIT');
         } catch (error) {
@@ -336,16 +360,12 @@ class RealEstateRepository {
             FROM cities c
                      JOIN real_estate_provinces rp ON rp.id = c.province_id
         `;
-
         const queryParams: any[] = [];
-
         if (provinceId) {
             query += ` WHERE c.province_id = $1`;
             queryParams.push(provinceId);
         }
-
         query += ` ORDER BY rp.name, c.name`;
-
         const result = await pool.query(query, queryParams);
         return result.rows;
     }
@@ -359,7 +379,6 @@ class RealEstateRepository {
             FROM real_estate_provinces
             ORDER BY name
         `;
-
         const result = await pool.query(query);
         return result.rows;
     }

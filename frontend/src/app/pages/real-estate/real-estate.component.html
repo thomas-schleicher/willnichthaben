@@ -1,0 +1,19 @@
+<div id="container">
+  <div id="filter">
+    <app-real-estate-filter (filtersApplied)="onFiltersApplied($event)"></app-real-estate-filter>
+  </div>
+  <div id="listings">
+    <app-real-estate-preview
+      *ngFor="let property of properties"
+      [id]="property.id"
+      [name]="property.name"
+      [property_type]="property.property_type"
+      [price]="property.price"
+      [location]="property.location"
+      [imageURL]="property.imageURL"
+      [living_area]="property.living_area"
+      [room_count]="property.room_count"
+      [availability]="property.availability">
+    </app-real-estate-preview>
+  </div>
+</div>

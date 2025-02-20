@@ -51,6 +51,26 @@ realEstateRouter.get('/provinces', async (req, res) => {
     }
 });
 
+realEstateRouter.get('/:id', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+            res.status(400).json({ error: 'Invalid ID format' });
+            return;
+        }
+
+        const listing = await RealEstateRepository.getRealEstateObjects({ id });
+        if (!listing || listing.length === 0) {
+            res.status(404).json({ error: 'Listing not found' });
+            return;
+        }
+
+        res.json({ listing: listing[0] });
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while fetching the real estate listing.' });
+    }
+});
+
 realEstateRouter.post('/', authService.isAuthenticated, async (req, res) => {
     const userID = sessionService.getSessionUserID(req);
     if (!userID) {
@@ -86,7 +106,6 @@ realEstateRouter.put('/', authService.isAuthenticated, async (req, res) => {
     }
 
     try {
-        // Verify ownership
         const listing_user_uuid = await listingRepository.getUserIDByListingID(parsed_listing_id);
         if (listing_user_uuid !== userID) {
             res.status(403).json({ error: 'You are not authorized to modify this listing' });
@@ -101,26 +120,6 @@ realEstateRouter.put('/', authService.isAuthenticated, async (req, res) => {
         } else {
             res.status(500).json({ error: 'An error occurred while updating the real estate listing' });
         }
-    }
-});
-
-realEstateRouter.get('/:id', async (req, res) => {
-    try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) {
-            res.status(400).json({ error: 'Invalid ID format' });
-            return;
-        }
-
-        const listing = await RealEstateRepository.getRealEstateObjects({ id });
-        if (!listing || listing.length === 0) {
-            res.status(404).json({ error: 'Listing not found' });
-            return;
-        }
-
-        res.json({ listing: listing[0] });
-    } catch (error) {
-        res.status(500).json({ error: 'An error occurred while fetching the real estate listing.' });
     }
 });
 

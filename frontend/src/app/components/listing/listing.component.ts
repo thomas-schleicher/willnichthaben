@@ -7,10 +7,12 @@ import { RetailItemSubheaderComponent } from '../retail_item/retail_item-subhead
 import { RetailItemDescriptionComponent } from '../retail_item/retail_item-description/retail_item-description.component';
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { ImageReelComponent } from '../image-reel/image-reel.component';
+import {RealEstateSubheaderComponent} from '../real-estate/real-estate-subheader/real-estate-subheader.component';
+import {RealEstateDescriptionComponent} from '../real-estate/real-estate-description/real-estate-description.component';
 
 @Component({
   selector: 'app-listing',
-  imports: [SidebarComponent, ImageReelComponent, VehicleSubheaderComponent, RetailItemSubheaderComponent, VehicleDescriptionComponent, RetailItemDescriptionComponent, NgIf, CommonModule],
+  imports: [SidebarComponent, ImageReelComponent, VehicleSubheaderComponent, RetailItemSubheaderComponent, VehicleDescriptionComponent, RetailItemDescriptionComponent, NgIf, CommonModule, RealEstateSubheaderComponent, RealEstateDescriptionComponent],
   templateUrl: './listing.component.html',
   styleUrl: './listing.component.scss'
 })
@@ -44,7 +46,20 @@ export class ListingComponent {
   retail_item_name: string = '';
   retail_item_delivery_options: string = '';
   retail_item_condition: string = '';
-  
+
+  //real-estate
+  availability: string = '';
+  living_area: string = '';
+  property_type: string = '';
+
+  property_room_count: number = -1;
+  property_kitchen: boolean = false;
+  property_cellar: boolean = false;
+  property_address: string = '';
+  property_renting_period: string = '';
+  property_balcony: boolean = false;
+  property_parking: boolean = false;
+
   constructor (private listingService: ListingService) {}
 
   ngOnInit() {
@@ -55,7 +70,7 @@ export class ListingComponent {
       this.address = listing.city + " " + listing.postal_code + ", " + listing.street_address;
       this.price = listing.price;
       this.description = listing.description;
-      
+
       this.vehicle_name = listing.vehicle_name;
       this.vehicle_date_first_registered = listing.vehicle_date_first_registration;
       this.vehicle_mileage = listing.vehicle_mileage;
@@ -69,6 +84,18 @@ export class ListingComponent {
       this.retail_item_name = listing.retail_name;
       this.retail_item_delivery_options = listing.retail_delivery_options;
       this.retail_item_condition = listing.retail_condition;
+
+      this.availability = listing.availability;
+      this.living_area = listing.living_area;
+      this.property_type = listing.property_type;
+
+      this.property_room_count = listing.room_count;
+      this.property_kitchen = listing.kitchen;
+      this.property_cellar = listing.cellar;
+      this.property_address = listing.address;
+      this.property_renting_period = listing.renting_period;
+      this.property_balcony = listing.balcony;
+      this.property_parking = listing.parking;
     });
-  }  
+  }
 }

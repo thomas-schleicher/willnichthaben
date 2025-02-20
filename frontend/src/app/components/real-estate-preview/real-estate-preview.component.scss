@@ -1,0 +1,42 @@
+.real-estate-card {
+  display: block;
+  text-decoration: none;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: #fff;
+  transition: box-shadow 0.3s ease;
+  max-width: 350px;
+  margin: 1rem;
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.card-image img {
+  width: 100%;
+  display: block;
+}
+
+.card-content {
+  padding: 1rem;
+}
+
+.property-title {
+  font-size: 1.2rem;
+  margin: 0;
+  color: #333;
+}
+
+.property-info {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.property-price {
+  font-size: 1.1rem;
+  color: #007b00;
+  font-weight: bold;
+}

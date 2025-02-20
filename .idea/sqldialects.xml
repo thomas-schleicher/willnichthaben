@@ -7,6 +7,7 @@
     <file url="file://$PROJECT_DIR$/db/scripts/vehicle_startup.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/db/scripts/z_sample_data.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/db/scripts/zz_chat_fill.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/db/scripts/zzz_data_fill.sql" dialect="PostgreSQL" />
     <file url="PROJECT" dialect="PostgreSQL" />
   </component>
 </project>

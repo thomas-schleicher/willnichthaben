@@ -3,7 +3,7 @@
         <h1>{{title}}</h1>
         <app-vehicle-subheader *ngIf="type === 'vehicle'" [date_first_registration]="vehicle_date_first_registered" [mileage]="vehicle_mileage" [condition]="vehicle_condition"></app-vehicle-subheader>
         <app-retail-item-subheader *ngIf="type === 'retail'" [name]="retail_item_name" [delivery_options]="retail_item_delivery_options" [condition]="retail_item_condition"></app-retail-item-subheader>
-        <!-- Add other subheaders here -->
+        <app-real-estate-subheader *ngIf="type === 'property'"  [availability]="availability" [living_area]="living_area" [property_type]="property_type"></app-real-estate-subheader>
     </div>
     <div>
         <app-image-reel [listing_id]="id"></app-image-reel>
@@ -11,7 +11,18 @@
     </div>
     <app-vehicle-description *ngIf="type === 'vehicle'" [color]="vehicle_color" [condition]="vehicle_condition" [date_of_registration]="vehicle_date_first_registered" [fuel_type]="vehicle_fuel_type" [mark]="vehicle_mark_name" [mileage]="vehicle_mileage" [model]="vehicle_model_name" [name]="vehicle_name" [type]="vehicle_type"></app-vehicle-description>
     <app-retail-item-description *ngIf="type === 'retail'" [name]="retail_item_name" [delivery_options]="retail_item_delivery_options" [condition]="retail_item_condition"></app-retail-item-description>
-    <!-- Add other modules here -->
+  <app-real-estate-description *ngIf="type === 'property'"
+                               [living_area]="living_area"
+                               [room_count]="property_room_count"
+                               [availability]="availability"
+                               [kitchen]="property_kitchen"
+                               [cellar]="property_cellar"
+                               [address]="property_address"
+                               [property_type]="property_type"
+                               [renting_period]="property_renting_period"
+                               [balcony]="property_balcony"
+                               [parking]="property_parking">
+  </app-real-estate-description>
     <h3>Description</h3>
     <p>{{description}}</p>
 </div>

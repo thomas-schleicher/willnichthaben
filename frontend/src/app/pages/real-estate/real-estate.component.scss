@@ -1,0 +1,23 @@
+/* real-estate.component.scss */
+#container {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem;
+}
+
+#filter {
+  width: 300px;
+  min-width: 300px;
+  background-color: #F3F6FB;
+  padding: 1rem;
+  border-radius: 8px;
+  height: fit-content;
+}
+
+#listings {
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 0 1rem;
+}
