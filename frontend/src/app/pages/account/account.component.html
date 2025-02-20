@@ -2,7 +2,7 @@
     <mat-card>
         <mat-card-content>
             <h2>You must log in first:</h2>
-            <app-login></app-login>
+            <app-login [override_redirect]="true"></app-login>
             <a href="/auth/signup">If you dont have an account, click here to signup!</a>
         </mat-card-content>
     </mat-card>
@@ -51,6 +51,7 @@
                     [condition]="listing.retail_condition">
                 </app-listing-preview>
                 <button (click)="modifyListing(listing.id)">Modify</button>
+                <button (click)="setListingSold(listing.id)">Set Sold</button>
                 <button (click)="deleteListing(listing.id)">Delete</button>
             </mat-card>
         </div>

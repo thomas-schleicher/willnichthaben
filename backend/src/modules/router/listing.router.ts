@@ -77,8 +77,29 @@ listingRouter.delete('/:id', authService.isAuthenticated, async (req, res) => {
     } else {
         res.status(500).json({});
     }
-    
 });
+
+listingRouter.put('/:id', authService.isAuthenticated, async (req, res) => {
+    const userID = sessionService.getSessionUserID(req);
+    if (!userID) {
+        res.status(500).json({error: "This should never happen" });
+        return;
+    }
+
+    const listingID = Number(req.params.id);
+    if (isNaN(listingID)) {
+        res.status(500).json({ error: "Listing ID is not provided or not a number"});
+        return;
+    }
+
+    const result = await listingRepository.setListingSold(Number(listingID), userID);
+
+    if (result) {
+        res.status(200).json({});
+    } else {
+        res.status(500).json({});
+    }
+})
 
 /****************************
  *                          *

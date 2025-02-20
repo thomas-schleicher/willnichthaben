@@ -88,6 +88,12 @@ export class AccountComponent {
     })
   }
 
+  setListingSold(listing_id: string | number) {
+    const id = Number(listing_id);
+    if (isNaN(id)) return;
+    this.listingService.setListingSold(id).subscribe();
+  }
+
   modifyListing(listingID: string | number) {
     const id = Number(listingID);
     if (isNaN(id)) return;

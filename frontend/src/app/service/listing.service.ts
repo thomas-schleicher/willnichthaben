@@ -6,6 +6,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ListingService {
+  setListingSold(id: number): Observable<any> {
+    return this.http.put("/listing/" + id.toString(), {});
+  }
 
   constructor(private http: HttpClient) { }
 

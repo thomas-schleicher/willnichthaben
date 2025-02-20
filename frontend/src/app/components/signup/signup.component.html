@@ -1,13 +1,23 @@
 <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-    <label for="email">Email: </label>
-    <input id="email" type="email" formControlName="email">
-    <label for="password">Password: </label>
-    <input id="password" type="password" formControlName="password">
-    <label for="city">City: </label>
-    <input id="city" type="text" formControlName="city">
-    <label for="postal_code">Postal Code: </label>
-    <input id="postal_code" type="string" formControlName="postal_code">
-    <label for="street_address">Street Address: </label>
-    <input id="street_address" type="text" formControlName="street_address">
+    <div class="form-field">
+        <label for="email">Email: </label>
+        <input id="email" type="email" formControlName="email">
+    </div>
+    <div class="form-field">
+        <label for="password">Password: </label>
+        <input id="password" type="password" formControlName="password">
+    </div>
+    <div class="form-field">
+        <label for="city">City: </label>
+        <input id="city" type="text" formControlName="city">
+    </div>
+    <div class="form-field">
+        <label for="postal_code">Postal Code: </label>
+        <input id="postal_code" type="string" formControlName="postal_code">
+    </div>
+    <div class="form-field">
+        <label for="street_address">Street Address: </label>
+        <input id="street_address" type="text" formControlName="street_address">
+    </div>
     <button type="submit" [disabled]="!signupForm.valid">Signup</button>
 </form>

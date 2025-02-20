@@ -2,6 +2,17 @@ import { listingImageShema } from "../../interfaces/listing.interface";
 import pool from "../config/postgres.config";
 
 class ListingRepository {
+  async setListingSold(listing_id: number, userID: string): Promise<boolean> {
+      const query = "UPDATE listings SET is_sold = TRUE WHERE id = $1 AND seller_id = $2;"
+      try {
+        await pool.query(query, [listing_id, userID]);
+      } catch (err) {
+        console.error("Error:", err);
+        return false;
+      }
+      return true;
+  }
+
   async deleteListing(listingID: number, userID: string): Promise<boolean> {
     const query = "DELETE FROM listings WHERE id = $1 AND seller_id = $2";
     try {
@@ -44,7 +55,6 @@ class ListingRepository {
             a.city,
             a.street_address,
             reo.listing_id,
-            reo.id,
             reo.name,
             reo.price_per_month,
             reo.living_area,
@@ -55,7 +65,6 @@ class ListingRepository {
             reo.cellar,
             reo.address,
             c.name   as city_name,
-            c.plz    as postal_code,
             rt.name  as property_type,
             rtc.name as category_name,
             reo.renting_period,
