@@ -26,7 +26,7 @@
 
             <div class="messages" *ngIf="!loadingMessages; else loadingMessagesTpl">
                 <div *ngFor="let msg of messages" class="message">
-                    <div class="sender">{{ msg.sender_id }}</div>
+                    <div class="sender">{{ msg.user_id }}</div>
                     <div class="text">{{ msg.message }}</div>
                     <div class="timestamp">{{ msg.created_at | date:'short' }}</div>
                 </div>
