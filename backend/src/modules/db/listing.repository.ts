@@ -55,7 +55,6 @@ class ListingRepository {
             a.city,
             a.street_address,
             reo.listing_id,
-            reo.id,
             reo.name,
             reo.price_per_month,
             reo.living_area,
