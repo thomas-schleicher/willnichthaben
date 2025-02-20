@@ -51,14 +51,22 @@ export class ListingComponent {
   availability: string = '';
   living_area: string = '';
   property_type: string = '';
-
   property_room_count: number = -1;
-  property_kitchen: boolean = false;
-  property_cellar: boolean = false;
+  property_kitchen: boolean | null = null;
+  property_cellar: boolean | null = null;
   property_address: string = '';
   property_renting_period: string = '';
-  property_balcony: boolean = false;
-  property_parking: boolean = false;
+  property_balcony: boolean | null = null;
+  property_parking: boolean | null = null;
+  property_balcony_size?: number;
+  property_garden: boolean | null = null;
+  property_storage_room: boolean | null = null;
+  property_land_plot_size?: number;
+  property_num_floors?: number;
+  property_term_type: string = '';
+  property_price_per_month: string = '';
+  property_advance_payment: string = '';
+  property_immediate_availability: boolean | null = null;
 
   constructor (private listingService: ListingService) {}
 
@@ -87,15 +95,23 @@ export class ListingComponent {
 
       this.availability = listing.availability;
       this.living_area = listing.living_area;
-      this.property_type = listing.property_type;
-
+      this.property_type = listing.type;
       this.property_room_count = listing.room_count;
       this.property_kitchen = listing.kitchen;
       this.property_cellar = listing.cellar;
-      this.property_address = listing.address;
+      this.property_address = listing.address.streetAddress;
       this.property_renting_period = listing.renting_period;
       this.property_balcony = listing.balcony;
       this.property_parking = listing.parking;
+      this.property_balcony_size = listing.balcony_size ? Number(listing.balcony_size) : undefined;
+      this.property_garden = listing.garden;
+      this.property_storage_room = listing.storage_room;
+      this.property_land_plot_size = listing.land_plot_size ? Number(listing.land_plot_size) : undefined;
+      this.property_num_floors = listing.num_floors ? Number(listing.num_floors) : undefined;
+      this.property_term_type = listing.term_type;
+      this.property_price_per_month = listing.price_per_month;
+      this.property_advance_payment = listing.advance_payment;
+      this.property_immediate_availability = listing.immediate_availability;
     });
   }
 }

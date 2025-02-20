@@ -1,43 +1,79 @@
 <h3>Property Details</h3>
 <div>
-  <div>
+  <div *ngIf="living_area">
     <p>Living Area</p>
     <p>{{living_area}} m²</p>
   </div>
-  <div>
+  <div *ngIf="room_count">
     <p>Room Count</p>
     <p>{{room_count}}</p>
   </div>
-  <div>
+  <div *ngIf="availability">
     <p>Available From</p>
     <p>{{availability}}</p>
   </div>
-  <div>
+  <div *ngIf="property_type">
     <p>Property Type</p>
     <p>{{property_type}}</p>
   </div>
-  <div>
+  <div *ngIf="address">
     <p>Address</p>
     <p>{{address}}</p>
   </div>
-  <div>
+  <div *ngIf="renting_period">
     <p>Rental Period</p>
     <p>{{renting_period}}</p>
   </div>
-  <div>
+  <div *ngIf="kitchen !== null">
     <p>Kitchen</p>
     <p>{{kitchen ? 'Yes' : 'No'}}</p>
   </div>
-  <div>
+  <div *ngIf="cellar !== null">
     <p>Cellar</p>
     <p>{{cellar ? 'Yes' : 'No'}}</p>
   </div>
-  <div>
+  <div *ngIf="balcony !== null">
     <p>Balcony</p>
     <p>{{balcony ? 'Yes' : 'No'}}</p>
   </div>
-  <div>
+  <div *ngIf="balcony_size">
+    <p>Balcony Size</p>
+    <p>{{balcony_size}} m²</p>
+  </div>
+  <div *ngIf="parking !== null">
     <p>Parking</p>
     <p>{{parking ? 'Yes' : 'No'}}</p>
+  </div>
+  <div *ngIf="garden !== null">
+    <p>Garden</p>
+    <p>{{garden ? 'Yes' : 'No'}}</p>
+  </div>
+  <div *ngIf="storage_room !== null">
+    <p>Storage Room</p>
+    <p>{{storage_room ? 'Yes' : 'No'}}</p>
+  </div>
+  <div *ngIf="land_plot_size">
+    <p>Land Plot Size</p>
+    <p>{{land_plot_size}} m²</p>
+  </div>
+  <div *ngIf="num_floors">
+    <p>Number of Floors</p>
+    <p>{{num_floors}}</p>
+  </div>
+  <div *ngIf="term_type">
+    <p>Term Type</p>
+    <p>{{term_type}}</p>
+  </div>
+  <div *ngIf="price_per_month">
+    <p>Price per Month</p>
+    <p>€{{price_per_month}}</p>
+  </div>
+  <div *ngIf="advance_payment">
+    <p>Advance Payment</p>
+    <p>€{{advance_payment}}</p>
+  </div>
+  <div *ngIf="immediate_availability !== null">
+    <p>Immediate Availability</p>
+    <p>{{immediate_availability ? 'Yes' : 'No'}}</p>
   </div>
 </div>

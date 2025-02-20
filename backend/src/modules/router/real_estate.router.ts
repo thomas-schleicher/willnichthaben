@@ -11,7 +11,7 @@ const realEstateRouter = Router();
 
 realEstateRouter.get('/', validateQuery(realEstateQuerySchema), async (req, res) => {
     try {
-        const filters = req.query as unknown as RealEstateListing;
+        const filters = req.query;
         const listings = await RealEstateRepository.getRealEstateObjects(filters);
         res.json({ listings });
     } catch (error) {

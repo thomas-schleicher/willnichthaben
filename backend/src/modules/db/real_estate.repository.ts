@@ -1,39 +1,17 @@
 import pool from "../config/postgres.config";
 import {RealEstateListing} from "../../interfaces/real-estate/real-estate-object.interface";
 
-interface RealEstateFilters {
-    listing_id: number;
-    topLevelCategory?: 'houses' | 'rooms/apartments';
-    type_ids?: number[];
-    province_id?: number;
-    city_ids?: number[];
-    price_min?: number;
-    price_max?: number;
-    renting_period?: string;
-    immediate_availability?: boolean;
-    living_area_min?: number;
-    living_area_max?: number;
-    room_count_min?: number;
-    room_count_max?: number;
-    property_type?: string;
-    category_name?: string;
-    kitchen?: boolean;
-    cellar?: boolean;
-    postal_code?: string;
-    balcony?: boolean;
-    balcony_size_min?: number;
-    balcony_size_max?: number;
-    garden?: boolean;
-    parking?: boolean;
-    storage_room?: boolean;
-    land_plot_size_min?: number;
-    land_plot_size_max?: number;
-    num_floors?: number;
-}
 
 class RealEstateRepository {
-    async getRealEstateObjects(filters: RealEstateFilters): Promise<RealEstateListing[]> {
-        let query = `
+    async getRealEstateObjects(filters: any): Promise<RealEstateListing[]> {
+        // Define filter types
+        type FilterFunction = (value: any) => { condition: string; value: any };
+        type FilterMapping = {
+            [key: string]: FilterFunction;
+        };
+
+        // Build base query with all joins
+        const baseQuery = `
             SELECT
                 reo.id,
                 reo.listing_id,
@@ -65,6 +43,7 @@ class RealEstateRepository {
                 c.plz as postal_code,
                 p.name as province
             FROM real_estate_objects reo
+                     JOIN listings ON reo.listing_id = listings.id
                      JOIN cities c ON c.id = reo.city_id
                      JOIN real_estate_provinces p ON p.id = c.province_id
                      JOIN real_estate_types rt ON rt.id = reo.type_id
@@ -72,161 +51,59 @@ class RealEstateRepository {
             WHERE reo.status = 'open'
         `;
 
+        // Define filter mappings with explicit typing
+        const filterConditions: FilterMapping = {
+            topLevelCategory: (value: string) => ({ condition: 'rtc.name = $', value }),
+            type_ids: (value: number[]) => ({ condition: 'rt.id = ANY($)', value }),
+            province_id: (value: number) => ({ condition: 'c.province_id = $', value }),
+            city_ids: (value: number[]) => ({ condition: 'c.id = ANY($)', value }),
+            price_min: (value: string) => ({ condition: 'reo.price_per_month >= $', value: parseFloat(value) }),
+            price_max: (value: string) => ({ condition: 'reo.price_per_month <= $', value: parseFloat(value) }),
+            renting_period: (value: string) => ({ condition: 'reo.renting_period = $', value }),
+            immediate_availability: (value: boolean) => ({ condition: 'reo.immediate_availability = $', value }),
+            living_area_min: (value: number) => ({ condition: 'reo.living_area >= $', value }),
+            living_area_max: (value: number) => ({ condition: 'reo.living_area <= $', value }),
+            room_count_min: (value: number) => ({ condition: 'reo.room_count >= $', value }),
+            room_count_max: (value: number) => ({ condition: 'reo.room_count <= $', value }),
+            property_type: (value: string) => ({ condition: 'rt.name = $', value }),
+            category_name: (value: string) => ({ condition: 'rtc.name = $', value }),
+            kitchen: (value: boolean) => ({ condition: 'reo.kitchen = $', value }),
+            cellar: (value: boolean) => ({ condition: 'reo.cellar = $', value }),
+            postal_code: (value: string) => ({ condition: 'c.plz = $', value }),
+            balcony: (value: boolean) => ({ condition: 'reo.balcony = $', value }),
+            balcony_size_min: (value: number) => ({ condition: 'reo.balcony_size >= $', value }),
+            balcony_size_max: (value: number) => ({ condition: 'reo.balcony_size <= $', value }),
+            garden: (value: boolean) => ({ condition: 'reo.garden = $', value }),
+            parking: (value: boolean) => ({ condition: 'reo.parking = $', value }),
+            storage_room: (value: boolean) => ({ condition: 'reo.storage_room = $', value }),
+            land_plot_size_min: (value: number) => ({ condition: 'reo.land_plot_size >= $', value }),
+            land_plot_size_max: (value: number) => ({ condition: 'reo.land_plot_size <= $', value }),
+            num_floors: (value: number) => ({ condition: 'reo.num_floors = $', value })
+        };
+
+        // Build WHERE clause and params
+        const conditions: string[] = [];
         const queryParams: any[] = [];
-        let paramCount = 0;
 
-        if (filters.topLevelCategory) {
-            paramCount++;
-            query += ` AND rtc.name = $${paramCount}`;
-            queryParams.push(filters.topLevelCategory);
-        }
+        Object.entries(filters).forEach(([key, value]) => {
+            if (value !== undefined && value !== null && key in filterConditions) {
+                const filterFn = filterConditions[key];
+                const { condition, value: processedValue } = filterFn(value);
+                conditions.push(condition + (queryParams.length + 1));
+                queryParams.push(processedValue);
+            }
+        });
 
-        if (filters.type_ids && filters.type_ids.length > 0) {
-            paramCount++;
-            query += ` AND rt.id = ANY($${paramCount})`;
-            queryParams.push(filters.type_ids);
-        }
-
-        if (filters.province_id) {
-            paramCount++;
-            query += ` AND c.province_id = $${paramCount}`;
-            queryParams.push(filters.province_id);
-        }
-
-        if (filters.city_ids && filters.city_ids.length > 0) {
-            paramCount++;
-            query += ` AND c.id = ANY($${paramCount})`;
-            queryParams.push(filters.city_ids);
-        }
-
-        if (filters.price_min !== undefined) {
-            paramCount++;
-            query += ` AND reo.price_per_month >= $${paramCount}`;
-            queryParams.push(filters.price_min);
-        }
-        if (filters.price_max !== undefined) {
-            paramCount++;
-            query += ` AND reo.price_per_month <= $${paramCount}`;
-            queryParams.push(filters.price_max);
-        }
-
-        if (filters.renting_period) {
-            paramCount++;
-            query += ` AND reo.renting_period = $${paramCount}`;
-            queryParams.push(filters.renting_period);
-        }
-
-        if (filters.immediate_availability !== undefined) {
-            paramCount++;
-            query += ` AND reo.immediate_availability = $${paramCount}`;
-            queryParams.push(filters.immediate_availability);
-        }
-
-        if (filters.living_area_min !== undefined) {
-            paramCount++;
-            query += ` AND reo.living_area >= $${paramCount}`;
-            queryParams.push(filters.living_area_min);
-        }
-        if (filters.living_area_max !== undefined) {
-            paramCount++;
-            query += ` AND reo.living_area <= $${paramCount}`;
-            queryParams.push(filters.living_area_max);
-        }
-
-        if (filters.room_count_min !== undefined) {
-            paramCount++;
-            query += ` AND reo.room_count >= $${paramCount}`;
-            queryParams.push(filters.room_count_min);
-        }
-        if (filters.room_count_max !== undefined) {
-            paramCount++;
-            query += ` AND reo.room_count <= $${paramCount}`;
-            queryParams.push(filters.room_count_max);
-        }
-
-        if (filters.property_type) {
-            paramCount++;
-            query += ` AND rt.name = $${paramCount}`;
-            queryParams.push(filters.property_type);
-        }
-
-        if (filters.category_name) {
-            paramCount++;
-            query += ` AND rtc.name = $${paramCount}`;
-            queryParams.push(filters.category_name);
-        }
-
-        if (filters.kitchen !== undefined) {
-            paramCount++;
-            query += ` AND reo.kitchen = $${paramCount}`;
-            queryParams.push(filters.kitchen);
-        }
-
-        if (filters.cellar !== undefined) {
-            paramCount++;
-            query += ` AND reo.cellar = $${paramCount}`;
-            queryParams.push(filters.cellar);
-        }
-
-        if (filters.postal_code) {
-            paramCount++;
-            query += ` AND c.plz = $${paramCount}`;
-            queryParams.push(filters.postal_code);
-        }
-
-        // Filters for merged additional properties.
-        if (filters.balcony !== undefined) {
-            paramCount++;
-            query += ` AND reo.balcony = $${paramCount}`;
-            queryParams.push(filters.balcony);
-        }
-        if (filters.balcony_size_min !== undefined) {
-            paramCount++;
-            query += ` AND reo.balcony_size >= $${paramCount}`;
-            queryParams.push(filters.balcony_size_min);
-        }
-        if (filters.balcony_size_max !== undefined) {
-            paramCount++;
-            query += ` AND reo.balcony_size <= $${paramCount}`;
-            queryParams.push(filters.balcony_size_max);
-        }
-        if (filters.garden !== undefined) {
-            paramCount++;
-            query += ` AND reo.garden = $${paramCount}`;
-            queryParams.push(filters.garden);
-        }
-        if (filters.parking !== undefined) {
-            paramCount++;
-            query += ` AND reo.parking = $${paramCount}`;
-            queryParams.push(filters.parking);
-        }
-        if (filters.storage_room !== undefined) {
-            paramCount++;
-            query += ` AND reo.storage_room = $${paramCount}`;
-            queryParams.push(filters.storage_room);
-        }
-        if (filters.land_plot_size_min !== undefined) {
-            paramCount++;
-            query += ` AND reo.land_plot_size >= $${paramCount}`;
-            queryParams.push(filters.land_plot_size_min);
-        }
-        if (filters.land_plot_size_max !== undefined) {
-            paramCount++;
-            query += ` AND reo.land_plot_size <= $${paramCount}`;
-            queryParams.push(filters.land_plot_size_max);
-        }
-        if (filters.num_floors !== undefined) {
-            paramCount++;
-            query += ` AND reo.num_floors = $${paramCount}`;
-            queryParams.push(filters.num_floors);
-        }
-        // add city id and province id
-
-        query += ` ORDER BY reo.price_per_month ASC`;
+        // Construct final query
+        const query = `
+        ${baseQuery}
+        ${conditions.length ? 'AND ' + conditions.join(' AND ') : ''}
+        ORDER BY reo.price_per_month ASC
+    `;
 
         const result = await pool.query(query, queryParams);
 
-        // Transform the results to match the RealEstateListing interface
+        // Transform results
         return result.rows.map(row => ({
             id: row.id,
             listing_id: row.listing_id,
