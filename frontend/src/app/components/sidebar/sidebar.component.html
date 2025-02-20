@@ -1,16 +1,13 @@
 <div class="container">
-    <div id="pricediv">
-        <p id="price">€ {{price}}</p>
-        <p>Selling price</p>
-    </div>
-    <div id="userdiv">
-        <div class="divider"></div>
-        <!-- TODO: User Profile Image -->
-        <p>{{seller_name}}</p>
-        <p>{{address}}</p>
-        <button>Message Seller</button>
-    </div>
+  <div id="pricediv">
+    <p id="price">€ {{price}}</p>
+    <p>Selling price</p>
+  </div>
+  <div id="userdiv">
+    <div class="divider"></div>
+    <!-- TODO: User Profile Image -->
+    <p>{{seller_name}}</p>
+    <p>{{address}}</p>
+    <button (click)="onMessageClick()">Message Seller</button>
+  </div>
 </div>
-
-
-
